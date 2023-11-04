@@ -29,6 +29,7 @@ model Shop {
   title       String
   description String
   address     String
+  imageURL    String?
   latitude    Float
   longitude   Float
   Follow      Follow[]
