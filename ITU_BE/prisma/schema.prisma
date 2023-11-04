@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  email     String    @unique
+  name      String
+  password  String
+  Follow    Follow[]
+  Review    Review[]
+  Message   Message[]
+}
+
+model Shop {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  title       String
+  description String
+  address     String
+  latitude    Float
+  longitude   Float
+  Follow      Follow[]
+  Review      Review[]
+  Message     Message[]
+}
+
+model Follow {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  shop      Shop     @relation(fields: [shopId], references: [id])
+  userId    Int
+  shopId    Int
+
+  @@unique([userId, shopId])
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  shop       Shop     @relation(fields: [shopId], references: [id])
+  userId     Int
+  shopId     Int
+  content    String
+  imageURL   String?
+  startGiven Int
+
+  @@unique([userId, shopId])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  shop      Shop     @relation(fields: [shopId], references: [id])
+  userId    Int
+  shopId    Int
+  message   String
+
+  @@unique([userId, shopId])
+}

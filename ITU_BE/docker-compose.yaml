@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15.2
+    ports:
+      - 5433:5433
+    environment:
+      POSTGRES_DB: itu_be
+      POSTGRES_USER: itu_be
+      POSTGRES_PASSWORD: itu_be
+    command: -p 5433
