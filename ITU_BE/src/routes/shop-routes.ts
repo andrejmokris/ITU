@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { validate } from '../middleware/schemaMiddleware';
+import * as ShopController from '../controllers/shop-controller';
 
 const shopRouter = Router();
 
-shopRouter.get('/');
-shopRouter.post('/signup');
-shopRouter.post('/');
+shopRouter.get('/', ShopController.getShops);
+shopRouter.post('/:id', ShopController.getShopById);
 
 export default shopRouter;
