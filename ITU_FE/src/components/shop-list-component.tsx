@@ -4,12 +4,20 @@ import { calculateDistance } from "../utils/geo";
 const ShopListComponent = ({
   shop,
   position,
+  setSelectedShop,
 }: {
   shop: Shop;
-  position: { latitude: number; longitude: number };
+  position: {
+    latitude: number;
+    longitude: number;
+  };
+  setSelectedShop: (shop: Shop) => void;
 }) => {
   return (
-    <div className="bg-[#E6F5F0] px-4 py-3 rounded-lg flex justify-between min-h-[150px]">
+    <button
+      className="bg-[#E6F5F0] px-4 py-3 rounded-lg flex justify-between min-h-[150px]"
+      onClick={() => setSelectedShop(shop)}
+    >
       <div className="w-2/3">
         <h1 className="font-semibold text-xl">{shop.title}</h1>
         <p className="text-xs">{shop.description}</p>
@@ -29,9 +37,9 @@ const ShopListComponent = ({
       </div>
       <div className="w-1/3 items-center justify-end flex flex-col">
         <img src={shop.imageURL} className="rounded-md" />
-        <p className="text-[#ABABAB] text-xs">{shop.address}</p>
+        <p className="text-[#ABABAB] text-xs mt-2">{shop.address}</p>
       </div>
-    </div>
+    </button>
   );
 };
 

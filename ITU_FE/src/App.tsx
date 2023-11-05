@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { Shop } from "./types/shop";
 import { useEffect, useState } from "react";
 import ShopListComponent from "./components/shop-list-component";
+import { MapController } from "./components/map-controller";
 
 function App() {
   const { data, isLoading, isError } = useQuery({
@@ -15,6 +16,7 @@ function App() {
   });
 
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
+  const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -42,19 +44,27 @@ function App() {
           <div className="w-1/2 px-3">
             <div className="space-y-2">
               {data?.map((shop) => (
-                <ShopListComponent shop={shop} position={position} />
+                <ShopListComponent
+                  shop={shop}
+                  position={position}
+                  setSelectedShop={setSelectedShop}
+                />
               ))}
             </div>
           </div>
           <div className="w-1/2">
             <MapContainer
               center={[49.19469087608702, 16.61131840963104]}
-              zoom={13}
+              zoom={14}
               scrollWheelZoom={true}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <MapController
+                // @ts-expect-error test
+                selectedShop={selectedShop}
               />
               {data?.map((shop) => (
                 <Marker
