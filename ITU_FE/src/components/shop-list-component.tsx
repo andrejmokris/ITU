@@ -5,6 +5,7 @@ const ShopListComponent = ({
   shop,
   position,
   setSelectedShop,
+  selectedShop,
 }: {
   shop: Shop;
   position: {
@@ -12,10 +13,13 @@ const ShopListComponent = ({
     longitude: number;
   };
   setSelectedShop: (shop: Shop) => void;
+  selectedShop: Shop | null;
 }) => {
   return (
     <button
-      className="bg-[#E6F5F0] px-4 py-3 rounded-lg flex justify-between min-h-[150px]"
+      className={`bg-[#E6F5F0] px-4 py-3 rounded-lg flex justify-between min-h-[150px] box-border ${
+        selectedShop?.id === shop.id && "bg-[#d3ebe3]"
+      }`}
       onClick={() => setSelectedShop(shop)}
     >
       <div className="w-2/3">

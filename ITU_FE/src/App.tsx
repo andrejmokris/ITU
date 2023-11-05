@@ -48,6 +48,7 @@ function App() {
                   shop={shop}
                   position={position}
                   setSelectedShop={setSelectedShop}
+                  selectedShop={selectedShop}
                 />
               ))}
             </div>
