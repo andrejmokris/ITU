@@ -1,0 +1,83 @@
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { useQuery } from 'react-query';
+import { Shop } from '@/types/shop';
+import { useEffect, useState } from 'react';
+import ShopListComponent from '@/components/shop-list-component';
+import { MapController } from '@/components/map-controller';
+import { api_client } from '@/utils/api-client';
+import { SearchBar } from '@/components/search-bar';
+
+export function HomePage() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['shopsQuery'],
+    queryFn: async () => {
+      const { data } = await api_client.get('shops');
+      return data as Array<Shop>;
+    }
+  });
+
+  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
+  const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setPosition({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+      });
+    } else {
+      console.log('Geolocation is not available in your browser.');
+    }
+  }, []);
+
+  if (isLoading) {
+    return <div className="font-bold text-center text-2xl">Loading...</div>;
+  } else if (isError) {
+    return <div className="font-bold text-center text-2xl">Error occured</div>;
+  }
+
+  return (
+    <div className="flex flex-col w-[min(1400px,95%)]">
+      <SearchBar />
+      <div className="w-full flex">
+        <div className="w-1/2 px-3">
+          <div className="space-y-2">
+            {data?.map((shop) => (
+              <ShopListComponent
+                shop={shop}
+                position={position}
+                setSelectedShop={setSelectedShop}
+                selectedShop={selectedShop}
+                key={`${shop.id}_key`}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="w-1/2">
+          <MapContainer center={[49.19469087608702, 16.61131840963104]} zoom={14} scrollWheelZoom={true}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapController
+              // @ts-expect-error test
+              selectedShop={selectedShop}
+            />
+            {data?.map((shop) => (
+              <Marker position={[shop.longitude, shop.latitude]} key={`market-${shop.id}`}>
+                <Popup>{shop.title}</Popup>
+              </Marker>
+            ))}
+            <Marker position={[position.latitude, position.longitude]} key={`market-your_location`}>
+              <Popup>
+                <div className="text-red-500">Your location</div>
+              </Popup>
+            </Marker>
+          </MapContainer>
+        </div>
+      </div>
+    </div>
+  );
+}

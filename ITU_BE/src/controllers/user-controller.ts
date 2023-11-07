@@ -40,3 +40,16 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
     token: generateToken(user.id)
   });
 };
+
+export const getMyProfile = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const user_id = req.user;
+  const user = await userRepository.findById(user_id);
+
+  if (!user) {
+    next(new NotFoundError('User not found'));
+    return;
+  }
+  const { password, ...user_without_password } = user;
+  res.json(user_without_password);
+};
