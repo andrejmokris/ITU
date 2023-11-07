@@ -3,6 +3,8 @@ import router from './routes/user-routes';
 import shopRouter from './routes/shop-routes';
 import errorMiddleware from './middleware/errorMiddleware';
 import cors from 'cors';
+import follow_router from './routes/follow-routes';
+import review_router from './routes/review-routes';
 
 const app = express();
 const port = 3000;
@@ -29,6 +31,8 @@ app.use(cors(corsOptions));
 
 app.use('/api/users', router);
 app.use('/api/shops', shopRouter);
+app.use('/api/follows', follow_router);
+app.use('/api/reviews', review_router);
 
 app.use(errorMiddleware);
 

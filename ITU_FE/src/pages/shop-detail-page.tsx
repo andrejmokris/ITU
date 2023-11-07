@@ -1,4 +1,5 @@
 import { ReviewSection } from '@/components/shop-detail/reviews-section';
+import { ShopToolBar } from '@/components/shop-detail/shop-tool-bar';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/components/ui/icons';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,7 +12,7 @@ export function ShopDetailPage() {
   const params = useParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['shopsDetailQuery'],
+    queryKey: ['shopsDetailQueryTest'],
     queryFn: async () => {
       const { data } = await api_client.get(`shops/${params.id}`);
       return data as Shop;
@@ -24,7 +25,7 @@ export function ShopDetailPage() {
     <div className="w-[min(1300px,95%)] bg-[#D9D9D9] dark:bg-slate-500 rounded-xl flex">
       <div className="bg-[#ABABAB] dark:bg-slate-700 w-1/3 rounded-xl px-8 py-5 flex flex-col items-center">
         {isLoading ? (
-          <div className="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+          <div className="flex items-center justify-center w-1/2 h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
             <svg
               className="w-10 h-10 text-gray-200 dark:text-gray-600"
               aria-hidden="true"
@@ -39,16 +40,7 @@ export function ShopDetailPage() {
           <img src={data?.imageURL} className="rounded-lg w-full" />
         )}
 
-        <div className="flex justify-between w-full mt-3">
-          <p className="font-bold">{data?.title}</p>
-          <div className="flex space-x-3 text-sm">
-            <a href={`http://www.google.com/maps/place/${data?.longitude},${data?.latitude}`} target="_blank">
-              <Icons.navigate />
-            </a>
-            <Icons.notification />
-            <Icons.heart />
-          </div>
-        </div>
+        {!isLoading && data && <ShopToolBar shop={data} />}
         <div className="flex w-full justify-start text-sm mt-2">
           <p className="w-2/5">{data?.address}</p>
         </div>

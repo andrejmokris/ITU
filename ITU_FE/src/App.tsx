@@ -53,7 +53,7 @@ function App() {
           <Route path="/questions" Component={QuestionPage} /> */}
         </Routes>
         <Toaster />
-        <Footer />
+        {!location.pathname.startsWith('/login') && <Footer />}
       </div>
     </div>
   );

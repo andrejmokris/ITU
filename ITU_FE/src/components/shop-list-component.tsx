@@ -18,7 +18,7 @@ const ShopListComponent = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <button
+    <div
       className={`bg-gray-100 dark:bg-slate-600 px-4 py-3 rounded-lg flex justify-between box-border ${
         selectedShop?.id === shop.id && 'bg-gray-200'
       }`}
@@ -48,7 +48,7 @@ const ShopListComponent = ({
           <p className="text-[#ABABAB] text-xs mt-2">{shop.address}</p>
         </div>
       </div>
-    </button>
+    </div>
   );
 };
 
