@@ -1,3 +1,4 @@
+import { AverageRating } from '@/components/shop-detail/averageRating';
 import { ReviewSection } from '@/components/shop-detail/reviews-section';
 import { ShopToolBar } from '@/components/shop-detail/shop-tool-bar';
 import { Badge } from '@/components/ui/badge';
@@ -18,8 +19,6 @@ export function ShopDetailPage() {
       return data as Shop;
     }
   });
-
-  const selectedCategories = ['Vintage', '€', '€€', "Men's cloting", 'Shoes', "Women's cloting"];
 
   return (
     <div className="w-[min(1300px,95%)] bg-[#D9D9D9] dark:bg-slate-500 rounded-xl flex">
@@ -44,15 +43,7 @@ export function ShopDetailPage() {
         <div className="flex w-full justify-start text-sm mt-2">
           <p className="w-2/5">{data?.address}</p>
         </div>
-        <div className="w-full justify-start mt-4">
-          <div className="w-2/5 bg-white rounded-full flex text-black px-2 items-center py-1">
-            <p className="text-sm font-bold pr-2">4.7</p>
-            <Icons.star />
-            <Icons.star />
-            <Icons.star />
-            <Icons.star />
-          </div>
-        </div>
+        {data && <AverageRating average={data?.rating} nOfReviews={data.nOfReviews} />}
         {isLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-4 w-3/4" />
@@ -62,9 +53,9 @@ export function ShopDetailPage() {
           <p className="mt-4">{data?.description}</p>
         )}
         <div className="flex flex-wrap w-full gap-3 mt-6">
-          {selectedCategories.map((item, i) => (
+          {data?.ShopTag.map((item, i) => (
             <Badge className="py-1 min-w-[60px] flex items-center justify-center" key={`detail_badge_${i}`}>
-              {item}
+              {item.tag.title}
             </Badge>
           ))}
         </div>

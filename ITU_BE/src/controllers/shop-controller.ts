@@ -1,9 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
 import * as shopRepository from '../repositories/shopRepository';
+import * as reviewRepository from '../repositories/reviewRepository';
 
 export const getAllShops = async (req: Request, res: Response) => {
-  const data = await shopRepository.findAll();
-  res.json(data);
+  const { q, tags } = req.query;
+  const tagsArray = String(tags)
+    .split(',')
+    .map((tag) => parseInt(tag, 10));
+
+  const shops = await shopRepository.findAll(String(q));
+
+  if (tagsArray.length < 1 || Number.isNaN(tagsArray[0])) {
+    res.json(shops);
+    return;
+  }
+
+  const filteredShops = new Set();
+
+  shops.forEach((shop) => {
+    if (shop.ShopTag.some((element) => tagsArray.includes(element.tagId))) {
+      filteredShops.add(shop);
+    }
+  });
+
+  res.json(Array.from(filteredShops));
 };
 
 export const filterShops = async (req: Request, res: Response) => {
@@ -23,5 +43,17 @@ export const filterShops = async (req: Request, res: Response) => {
 
 export const getShopById = async (req: Request, res: Response) => {
   const data = await shopRepository.findById(Number(req.params.id));
-  res.json(data);
+  const reviews = await reviewRepository.shopReviews(Number(req.params.id));
+
+  let averageRating = 0;
+
+  reviews.forEach((review) => {
+    averageRating += review.starsGiven;
+  });
+
+  if (reviews.length > 0) {
+    averageRating = averageRating / reviews.length;
+  }
+
+  res.json({ ...data, rating: averageRating, nOfReviews: reviews.length });
 };

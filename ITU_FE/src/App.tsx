@@ -32,9 +32,9 @@ function App() {
   return (
     <div className="flex flex-col h-screen w-full">
       {!currentPath.pathname.startsWith('/login') && (
-        <div className="border-b mb-4">
+        <div className="border-b mb-4 w-full sticky top-0 dark:bg-[#020817] bg-white z-20">
           <div className="flex h-16 items-center px-4">
-            <MainNav className="" />
+            <MainNav />
             <div className="ml-auto flex items-center space-x-4">
               <UserNav />
               <ModeToggle />
@@ -48,9 +48,6 @@ function App() {
           <Route path="/" Component={HomePage} />
           <Route path="/login" Component={LogInPage} />
           <Route path="/shop/:id" Component={ShopDetailPage} />
-          {/* <Route path="/clones" Component={ClonesPage} />
-          <Route path="/answer" Component={AnswerPage} />
-          <Route path="/questions" Component={QuestionPage} /> */}
         </Routes>
         <Toaster />
         {!location.pathname.startsWith('/login') && <Footer />}

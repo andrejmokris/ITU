@@ -6,18 +6,34 @@ import ShopListComponent from '@/components/shop-list-component';
 import { MapController } from '@/components/map-controller';
 import { api_client } from '@/utils/api-client';
 import { SearchBar } from '@/components/search-bar';
+import { useSearchParams } from 'react-router-dom';
+import useDebounce from '@/hooks/useDebounce';
+import { Button } from '@/components/ui/button';
 
 export function HomePage() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['shopsQuery'],
+  const [searchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage] = useState(3);
+  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
+  const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
+
+  const q = searchParams.get('q');
+  const tags = searchParams.get('tags');
+
+  // @ts-expect-error param will be found
+  const debouncedSearchTerm = useDebounce(q, 300);
+  // @ts-expect-error param will be found
+  const debouncedTag = useDebounce(tags, 500);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['shopsQuery', debouncedSearchTerm, debouncedTag],
     queryFn: async () => {
-      const { data } = await api_client.get('shops');
+      const { data } = await api_client.get('shops', {
+        params: searchParams
+      });
       return data as Array<Shop>;
     }
   });
-
-  const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
-  const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -32,19 +48,16 @@ export function HomePage() {
     }
   }, []);
 
-  if (isLoading) {
-    return <div className="font-bold text-center text-2xl">Loading...</div>;
-  } else if (isError) {
-    return <div className="font-bold text-center text-2xl">Error occured</div>;
-  }
-
   return (
     <div className="flex flex-col w-[min(1400px,95%)]">
       <SearchBar />
       <div className="w-full flex">
         <div className="w-1/2 px-3">
           <div className="space-y-2">
-            {data?.map((shop) => (
+            {(!data || data.length == 0) && !isLoading && (
+              <p className="font-bold text-red-500 text-center">Nothing to show</p>
+            )}
+            {data?.slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((shop) => (
               <ShopListComponent
                 shop={shop}
                 position={position}
@@ -53,9 +66,22 @@ export function HomePage() {
                 key={`${shop.id}_key`}
               />
             ))}
+            <div className="flex w-full justify-between">
+              <Button variant={'outline'} onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage == 0}>
+                Previous Page
+              </Button>
+              <Button
+                variant={'outline'}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                // @ts-expect-error test
+                disabled={currentPage * itemsPerPage >= Math.floor(data?.length / itemsPerPage)}
+              >
+                Next Page
+              </Button>
+            </div>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 min-h-[650px]">
           <MapContainer center={[49.19469087608702, 16.61131840963104]} zoom={14} scrollWheelZoom={true}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

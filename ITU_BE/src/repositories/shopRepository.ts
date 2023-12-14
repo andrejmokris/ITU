@@ -1,7 +1,18 @@
 import prisma from '../db';
 
-export const findAll = async () => {
-  const data = await prisma.shop.findMany();
+export const findAll = async (query: string) => {
+  const data = await prisma.shop.findMany({
+    where: {
+      OR: [
+        { title: { contains: query, mode: 'insensitive' } },
+        { address: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } }
+      ]
+    },
+    include: {
+      ShopTag: true
+    }
+  });
   return data;
 };
 
@@ -9,6 +20,13 @@ export const findById = async (id: number) => {
   const data = await prisma.shop.findFirst({
     where: {
       id: id
+    },
+    include: {
+      ShopTag: {
+        include: {
+          tag: true
+        }
+      }
     }
   });
   return data;

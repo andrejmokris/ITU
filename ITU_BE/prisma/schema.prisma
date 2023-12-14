@@ -61,8 +61,6 @@ model Review {
   imageURL   String?
   starsGiven Int      @default(0)
   priceRange Int?
-
-  @@unique([userId, shopId])
 }
 
 model Message {

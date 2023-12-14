@@ -6,6 +6,11 @@ import cors from 'cors';
 import follow_router from './routes/follow-routes';
 import review_router from './routes/review-routes';
 
+import { createUploadthingExpressHandler } from 'uploadthing/express';
+
+import { uploadRouter } from './uploadthing';
+import tagRoutes from './routes/tag-routes';
+
 const app = express();
 const port = 3000;
 
@@ -29,10 +34,18 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(
+  '/api/uploadthing',
+  createUploadthingExpressHandler({
+    router: uploadRouter
+  })
+);
+
 app.use('/api/users', router);
 app.use('/api/shops', shopRouter);
 app.use('/api/follows', follow_router);
 app.use('/api/reviews', review_router);
+app.use('/api/tags', tagRoutes);
 
 app.use(errorMiddleware);
 
