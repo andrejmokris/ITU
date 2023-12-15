@@ -4,10 +4,11 @@ import { useQuery } from 'react-query';
 import { api_client } from '@/utils/api-client';
 import { MultiSelect } from './ui/multi-select';
 import { useSearchParams } from 'react-router-dom';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export function SearchBar() {
   const [selected, setSelected] = useState<string[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams({ q: '', tags: [] });
+  const [searchParams, setSearchParams] = useSearchParams({ q: '', tags: [], followed: 'false' });
 
   const { data: tagData } = useQuery({
     queryKey: 'tagsQuery',
@@ -20,6 +21,7 @@ export function SearchBar() {
   });
 
   const q = searchParams.get('q');
+  const followed = searchParams.get('followed');
 
   useEffect(() => {
     const transferID: number[] = [];
@@ -44,7 +46,7 @@ export function SearchBar() {
           type="email"
           id="email"
           placeholder="Brno"
-          className="w-full"
+          className="w-1/2"
           // @ts-expect-error param will be found
           value={q}
           onChange={(e) =>
@@ -55,7 +57,7 @@ export function SearchBar() {
           }
         />
         {tagData && (
-          <div className="w-full">
+          <div className="w-1/2">
             <MultiSelect
               options={tagData?.map((item) => {
                 return {
@@ -68,6 +70,24 @@ export function SearchBar() {
             />
           </div>
         )}
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="terms"
+            onCheckedChange={() => {
+              setSearchParams((prev) => {
+                prev.set('followed', prev.get('followed') === 'true' ? 'false' : 'true');
+                return prev;
+              });
+            }}
+            checked={followed === 'true'}
+          />
+          <label
+            htmlFor="terms"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Show followed
+          </label>
+        </div>
       </div>
     </div>
   );

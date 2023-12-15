@@ -5,6 +5,7 @@ export type Review = {
   imageURL: string?;
   starsGiven: number;
   priceRange: number;
+  userId: number;
   user: {
     name: string;
   };

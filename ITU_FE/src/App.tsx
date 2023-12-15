@@ -7,27 +7,31 @@ import { HomePage } from './pages/home-page';
 import { useEffect } from 'react';
 import { api_client } from './utils/api-client';
 import { Toaster } from './components/ui/toaster';
-import { toast } from './components/ui/use-toast';
 import { Footer } from './components/footer';
 import { ShopDetailPage } from './pages/shop-detail-page';
+import useAuthStore from './store/user-store';
 
 function App() {
   const currentPath = useLocation();
   const navigate = useNavigate();
 
+  const userStore = useAuthStore();
+
   useEffect(() => {
-    if (!currentPath.pathname.startsWith('/login')) {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        toast({
-          title: 'You need to log in',
-          variant: 'destructive'
-        });
+    const verifyUser = async () => {
+      const resp = await userStore.fetchUser();
+      if (!resp) {
         navigate('/login');
       }
-      api_client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    };
+    if (!userStore.isAuthenticated) {
+      verifyUser();
     }
-  }, [currentPath.pathname, navigate]);
+    const token = localStorage.getItem('authToken');
+    api_client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col h-screen w-full">

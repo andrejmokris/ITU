@@ -38,7 +38,7 @@ export function ReviewSection() {
         <Button
           variant={'outline'}
           onClick={() => setCurrentPage(currentPage + 1)}
-          // @ts-expect-error test
+          // @ts-expect-error fdfd
           disabled={currentPage * itemsPerPage >= Math.floor(data?.length / itemsPerPage)}
         >
           Next

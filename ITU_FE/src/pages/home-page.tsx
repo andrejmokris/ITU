@@ -19,6 +19,7 @@ export function HomePage() {
 
   const q = searchParams.get('q');
   const tags = searchParams.get('tags');
+  const followed = searchParams.get('followed');
 
   // @ts-expect-error param will be found
   const debouncedSearchTerm = useDebounce(q, 300);
@@ -26,7 +27,7 @@ export function HomePage() {
   const debouncedTag = useDebounce(tags, 500);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['shopsQuery', debouncedSearchTerm, debouncedTag],
+    queryKey: ['shopsQuery', debouncedSearchTerm, debouncedTag, followed],
     queryFn: async () => {
       const { data } = await api_client.get('shops', {
         params: searchParams

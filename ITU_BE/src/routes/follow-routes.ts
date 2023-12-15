@@ -4,8 +4,10 @@ import authMiddleware from '../middleware/authMiddleware';
 
 const follow_router = Router();
 
-follow_router.get('/:id', authMiddleware, followController.isUserFollowingShop);
-follow_router.post('/:id', authMiddleware, followController.newShopFollow);
-follow_router.delete('/:id', authMiddleware, followController.removeFollow);
+follow_router.use(authMiddleware);
+
+follow_router.get('/:id', followController.isUserFollowingShop);
+follow_router.post('/:id', followController.newShopFollow);
+follow_router.delete('/:id', followController.removeFollow);
 
 export default follow_router;

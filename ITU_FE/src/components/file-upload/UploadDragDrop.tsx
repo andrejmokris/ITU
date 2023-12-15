@@ -29,9 +29,6 @@ export default function UploadComponent() {
 
     const selectedFiles = Array.from(e.dataTransfer.files);
 
-    // console.log the types of the files
-    console.log(selectedFiles.map((file) => file.type.split('/')[0]));
-
     if (
       selectedFiles.some((file) => {
         const fileType = file.type.split('/')[0];
@@ -104,8 +101,6 @@ export default function UploadComponent() {
       }
     });
     setTotalWeight(files.reduce((acc, file) => acc + file.size, 0));
-    console.log(files);
-    console.log(files.length);
   }, [files, loadingState]);
 
   const queryClient = useQueryClient();
@@ -117,7 +112,6 @@ export default function UploadComponent() {
       for (let i = 0; i < formData.length; i++) {
         data_to_send.append('file', formData[i]);
       }
-      console.log(data_to_send);
       const { data } = await api_client.post(`shops/upload/${params.id}`, data_to_send, {
         headers: {
           'Content-Type': 'multipart/form-data'

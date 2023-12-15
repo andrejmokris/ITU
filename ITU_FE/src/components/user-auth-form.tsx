@@ -27,7 +27,6 @@ export function UserAuthForm() {
     setIsLoading(true);
     try {
       const resp = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/log-in`, values);
-      console.log(resp.data);
       localStorage.setItem('authToken', resp.data.token);
       api_client.defaults.headers.common['Authorization'] = `Bearer ${resp.data.token}`;
       navigate('/');

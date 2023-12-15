@@ -5,12 +5,30 @@ import prisma from '../db';
 import { NotFoundError } from '../utils/errors';
 
 export const getAllShops = async (req: Request, res: Response) => {
-  const { q, tags } = req.query;
+  // @ts-expect-error
+  const userID = req.user;
+
+  const { q, tags, followed } = req.query;
+
   const tagsArray = String(tags)
     .split(',')
     .map((tag) => parseInt(tag, 10));
 
-  const shops = await shopRepository.findAll(String(q));
+  let shops = await shopRepository.findAll(String(q));
+
+  if (followed === 'true') {
+    const followed_shops = await prisma.follow.findMany({
+      where: {
+        userId: userID
+      }
+    });
+
+    // Extract shop IDs from followed_shops
+    const followedShopIds = followed_shops.map((followedShop) => followedShop.shopId);
+
+    // Filter shops that are followed by the user
+    shops = shops.filter((shop) => followedShopIds.includes(shop.id));
+  }
 
   if (tagsArray.length < 1 || Number.isNaN(tagsArray[0])) {
     res.json(shops);
@@ -26,21 +44,6 @@ export const getAllShops = async (req: Request, res: Response) => {
   });
 
   res.json(Array.from(filteredShops));
-};
-
-export const filterShops = async (req: Request, res: Response) => {
-  const { location, rating, assortment, sortBy, tag } = req.query;
-  // @ts-expect-error
-  const filterByTags = await shopRepository.findByTags(Array.isArray(tag) ? tag : [tag]);
-  // @ts-expect-error
-  const filteredByLocation = await shopRepository.findByLocation(location);
-
-  const locationIDs = filteredByLocation.map((shop) => shop.id);
-
-  // Find the intersection of shops based on unique IDs
-  const intersection = filterByTags.filter((shop) => locationIDs.includes(shop.id));
-
-  res.json(intersection);
 };
 
 export const getShopById = async (req: Request, res: Response) => {

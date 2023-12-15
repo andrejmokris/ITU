@@ -8,6 +8,10 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     '/': {
       name: 'Home',
       privateRoute: false
+    },
+    '/events': {
+      name: 'Events',
+      privateRoute: false
     }
   };
   return (

@@ -4,6 +4,7 @@ import newReviewScheme from '../schemas/newReviewSchema';
 import { NotFoundError } from '../utils/errors';
 import { findById } from '../repositories/shopRepository';
 import { z } from 'zod';
+import prisma from '../db';
 
 export const getReviewsForShop = async (req: Request, res: Response) => {
   const data = await reviewRepository.shopReviews(Number(req.params.id));
@@ -21,10 +22,18 @@ export const createReview = async (req: Request, res: Response, next: NextFuncti
     return;
   }
 
-  console.log(userID);
-  console.log(data.body);
-
   const createdReview = await reviewRepository.create(userID, data);
 
   res.json(createdReview);
+};
+
+export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
+  const reviewId = Number(req.params.id);
+  const deletedReview = await prisma.review.delete({
+    where: {
+      id: reviewId
+    }
+  });
+
+  res.json(deletedReview);
 };
