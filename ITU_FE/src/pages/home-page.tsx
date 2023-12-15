@@ -32,6 +32,9 @@ export function HomePage() {
         params: searchParams
       });
       return data as Array<Shop>;
+    },
+    onSuccess: () => {
+      setCurrentPage(0);
     }
   });
 

@@ -36,7 +36,8 @@ export function CreateReview({ id }: { id: number }) {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(`shopReviewsQuery${id}`);
+      queryClient.invalidateQueries({ queryKey: ['shopReviewsQuery'] });
+      queryClient.invalidateQueries({ queryKey: ['shopsDetailQuery'] });
       toast({
         title: 'Review Created'
       });

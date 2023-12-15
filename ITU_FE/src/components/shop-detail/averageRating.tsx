@@ -19,7 +19,7 @@ export function AverageRating({ average, nOfReviews }: { average: number; nOfRev
   return (
     <div className="w-full mt-2">
       <div className="w-2/5 bg-white rounded-full flex text-black px-2 items-center py-1">
-        <p className="text-sm font-bold pr-2">{average}</p>
+        <p className="text-sm font-bold pr-2">{average.toFixed(1)}</p>
         {filledStarsArray}
         {unfilledStarsArray}
       </div>
