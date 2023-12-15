@@ -10,6 +10,7 @@ import { Toaster } from './components/ui/toaster';
 import { Footer } from './components/footer';
 import { ShopDetailPage } from './pages/shop-detail-page';
 import useAuthStore from './store/user-store';
+import { EventsPage } from './pages/events-page';
 
 function App() {
   const currentPath = useLocation();
@@ -50,6 +51,8 @@ function App() {
       <div className="flex flex-col items-center w-full h-full relative flex-grow">
         <Routes>
           <Route path="/" Component={HomePage} />
+          <Route path="/home" Component={HomePage} />
+          <Route path="/events" Component={EventsPage} />
           <Route path="/login" Component={LogInPage} />
           <Route path="/shop/:id" Component={ShopDetailPage} />
         </Routes>

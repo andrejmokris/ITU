@@ -69,6 +69,7 @@ export const uploadPhoto = async (req: Request, res: Response) => {
     return res.status(400).send('No file uploaded.');
   }
 
+  // @ts-ignore
   const filePath: string = req.file.path;
   const shopId = req.params.id;
 

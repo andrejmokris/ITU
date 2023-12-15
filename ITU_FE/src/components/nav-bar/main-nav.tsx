@@ -5,7 +5,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
   const currentPath = useLocation();
 
   const navItems = {
-    '/': {
+    '/home': {
       name: 'Home',
       privateRoute: false
     },

@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  email     String    @unique
-  name      String
-  password  String
-  Follow    Follow[]
-  Review    Review[]
-  Message   Message[]
+  id                 Int                  @id @default(autoincrement())
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @default(now()) @updatedAt
+  email              String               @unique
+  name               String
+  password           String
+  Follow             Follow[]
+  Review             Review[]
+  Message            Message[]
+  Event              Event[]
+  EventParticipation EventParticipation[]
 }
 
 model Shop {
@@ -98,4 +100,25 @@ model ShopTag {
   shopId Int
   tag    Tag  @relation(fields: [tagId], references: [id])
   shop   Shop @relation(fields: [shopId], references: [id])
+}
+
+model Event {
+  id                 Int                  @id @default(autoincrement())
+  title              String
+  createdAt          DateTime             @default(now())
+  description        String?
+  imageURL           String?
+  startDate          DateTime
+  author             User                 @relation(fields: [authorId], references: [id])
+  authorId           Int
+  EventParticipation EventParticipation[]
+}
+
+model EventParticipation {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  event     Event    @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
