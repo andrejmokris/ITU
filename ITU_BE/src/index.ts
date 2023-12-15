@@ -8,6 +8,7 @@ import follow_router from './routes/follow-routes';
 import review_router from './routes/review-routes';
 
 import tagRoutes from './routes/tag-routes';
+import eventRoutes from './routes/event-routes';
 
 const app = express();
 const port = 3000;
@@ -36,6 +37,7 @@ app.use('/api/shops', shopRouter);
 app.use('/api/follows', follow_router);
 app.use('/api/reviews', review_router);
 app.use('/api/tags', tagRoutes);
+app.use('/api/events', eventRoutes);
 
 app.use(errorMiddleware);
 

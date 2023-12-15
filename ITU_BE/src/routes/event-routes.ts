@@ -20,3 +20,5 @@ eventRoutes.post('/', validate(newEventScheme), eventController.createEvent);
 eventRoutes.post('/signup/:id', validateParams(routeIdScheme), eventController.signUpToEvent);
 
 eventRoutes.delete('/signup/:id', validateParams(routeIdScheme), eventController.signOutOfEvent);
+
+export default eventRoutes;

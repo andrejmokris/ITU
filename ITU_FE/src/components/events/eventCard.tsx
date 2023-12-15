@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { CardContent, Card } from '@/components/ui/card';
+import { ThriftEvent } from '@/types/event';
 import { SVGProps } from 'react';
 import { JSX } from 'react/jsx-runtime';
 
-export default function EventCard() {
+export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent }) {
   return (
     <Card className="bg-white shadow-md rounded-lg overflow-hidden w-full md:w-2/3 lg:w-1/3 mx-auto">
       <div className="relative">
@@ -11,7 +12,7 @@ export default function EventCard() {
           alt="Thrift show event"
           className="w-full h-[] object-cover"
           height="100"
-          src="https://generated.vusercontent.net/placeholder.svg"
+          src={thriftEvent.imageURL ? thriftEvent.imageURL : 'https://generated.vusercontent.net/placeholder.svg'}
           style={{
             aspectRatio: '400/200',
             objectFit: 'cover'
@@ -19,7 +20,7 @@ export default function EventCard() {
           width="400"
         />
         <div className="absolute bottom-0 bg-black bg-opacity-60 text-white px-4 py-2">
-          <h3 className="text-xl font-semibold">Thrifty Thursdays</h3>
+          <h3 className="text-xl font-semibold">{thriftEvent.title}</h3>
           <p className="text-sm">
             <CalendarDaysIcon className="inline-block mr-1 h-4 w-4" />
             December 30, 2023
@@ -27,10 +28,7 @@ export default function EventCard() {
         </div>
       </div>
       <CardContent className="space-y-2 p-4">
-        <p className="text-gray-600">
-          Join us for an evening of sustainable shopping and fun at our weekly thrift show. Find unique, gently-used
-          items at great prices!
-        </p>
+        <p className="text-gray-600">{thriftEvent.description}</p>
         <div className="flex justify-between items-center">
           <Button className="text-sm" variant="outline">
             Learn More

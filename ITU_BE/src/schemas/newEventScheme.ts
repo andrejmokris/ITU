@@ -4,7 +4,7 @@ const newEventScheme = z.object({
   body: z.object({
     title: z.string(),
     description: z.string(),
-    imageURL: z.string().optional(),
+    imageURL: z.string().url().optional(),
     startDate: z.string().datetime()
   })
 });
