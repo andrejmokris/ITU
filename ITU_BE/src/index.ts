@@ -1,4 +1,5 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import router from './routes/user-routes';
 import shopRouter from './routes/shop-routes';
 import errorMiddleware from './middleware/errorMiddleware';
@@ -6,9 +7,6 @@ import cors from 'cors';
 import follow_router from './routes/follow-routes';
 import review_router from './routes/review-routes';
 
-import { createUploadthingExpressHandler } from 'uploadthing/express';
-
-import { uploadRouter } from './uploadthing';
 import tagRoutes from './routes/tag-routes';
 
 const app = express();
@@ -17,7 +15,6 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Allow requests from 'http://localhost:5173'
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
 
 const corsOptions = {
@@ -33,13 +30,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-app.use(
-  '/api/uploadthing',
-  createUploadthingExpressHandler({
-    router: uploadRouter
-  })
-);
 
 app.use('/api/users', router);
 app.use('/api/shops', shopRouter);

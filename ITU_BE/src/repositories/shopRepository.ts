@@ -26,6 +26,11 @@ export const findById = async (id: number) => {
         include: {
           tag: true
         }
+      },
+      PhotoUpload: {
+        select: {
+          id: true
+        }
       }
     }
   });

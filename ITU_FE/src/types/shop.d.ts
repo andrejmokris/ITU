@@ -18,4 +18,5 @@ export type Shop = {
   ShopTag: Array<ShopTag>;
   rating: number;
   nOfReviews: number;
+  PhotoUpload: Array<{ id: number }>;
 };

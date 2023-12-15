@@ -1,8 +1,8 @@
+import UploadComponent from '@/components/file-upload/UploadDragDrop';
 import { AverageRating } from '@/components/shop-detail/averageRating';
 import { ReviewSection } from '@/components/shop-detail/reviews-section';
 import { ShopToolBar } from '@/components/shop-detail/shop-tool-bar';
 import { Badge } from '@/components/ui/badge';
-import { Icons } from '@/components/ui/icons';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Shop } from '@/types/shop';
 import { api_client } from '@/utils/api-client';
@@ -13,12 +13,14 @@ export function ShopDetailPage() {
   const params = useParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['shopsDetailQueryTest'],
+    queryKey: ['shopsDetailQuery'],
     queryFn: async () => {
       const { data } = await api_client.get(`shops/${params.id}`);
       return data as Shop;
     }
   });
+
+  const apiURL = `${import.meta.env.VITE_API_URL}/api`;
 
   return (
     <div className="w-[min(1300px,95%)] bg-[#D9D9D9] dark:bg-slate-500 rounded-xl flex">
@@ -79,20 +81,17 @@ export function ShopDetailPage() {
       </div>
       <div className="w-2/3 px-8 py-8 flex flex-col items-center">
         <div className="w-full justify-start">
-          <h1 className="font-bold text-xl">Photos from customers</h1>
+          <div className="flex justify-between">
+            <h1 className="font-bold text-xl">Photos from customers</h1>
+            <UploadComponent />
+          </div>
+
           <div className="flex w-full space-x-4 mt-4">
-            <img
-              src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"
-              className="w-1/5 rounded-xl"
-            />
-            <img
-              src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"
-              className="w-1/5 rounded-xl"
-            />
-            <img
-              src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"
-              className="w-1/5 rounded-xl"
-            />
+            {data && data?.PhotoUpload.length > 0 ? (
+              data?.PhotoUpload.map((item) => <img src={`${apiURL}/shops/photo/${item.id}`} className="w-1/5"></img>)
+            ) : (
+              <p className="font-semibold text-red-500">No photos found</p>
+            )}
           </div>
         </div>
         <ReviewSection />

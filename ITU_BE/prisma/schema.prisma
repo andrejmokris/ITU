@@ -23,9 +23,9 @@ model User {
 }
 
 model Shop {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
   title       String
   description String
   address     String
@@ -36,6 +36,16 @@ model Shop {
   Review      Review[]
   Message     Message[]
   ShopTag     ShopTag[]
+  PhotoUpload PhotoUpload[]
+}
+
+model PhotoUpload {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  uploadPath String
+  shop       Shop     @relation(fields: [shopId], references: [id])
+  shopId     Int
 }
 
 model Follow {

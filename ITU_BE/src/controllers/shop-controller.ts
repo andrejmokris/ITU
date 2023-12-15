@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import * as shopRepository from '../repositories/shopRepository';
 import * as reviewRepository from '../repositories/reviewRepository';
+import prisma from '../db';
+import { NotFoundError } from '../utils/errors';
 
 export const getAllShops = async (req: Request, res: Response) => {
   const { q, tags } = req.query;
@@ -56,4 +58,38 @@ export const getShopById = async (req: Request, res: Response) => {
   }
 
   res.json({ ...data, rating: averageRating, nOfReviews: reviews.length });
+};
+
+export const uploadPhoto = async (req: Request, res: Response) => {
+  // @ts-ignore
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  const filePath: string = req.file.path;
+  const shopId = req.params.id;
+
+  const uploadedPhoto = await prisma.photoUpload.create({
+    data: {
+      uploadPath: filePath,
+      shopId: Number(shopId)
+    }
+  });
+
+  res.json(uploadedPhoto);
+};
+
+export const getPhoto = async (req: Request, res: Response, next: NextFunction) => {
+  const photoId = Number(req.params.id);
+  const photo = await prisma.photoUpload.findFirst({
+    where: {
+      id: photoId
+    }
+  });
+  if (!photo || !photo.uploadPath) {
+    next(next(new NotFoundError('Shop not found')));
+    return;
+  }
+
+  res.sendFile(photo.uploadPath);
 };
