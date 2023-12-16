@@ -15,9 +15,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '../ui/input';
 
 const formSchema = z.object({
-  title: z.string(),
+  title: z.string().min(5),
   description: z.string().optional(),
-  price: z.string(),
+  price: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1)),
   size: z.string(),
   image: z.custom<File>((v) => v instanceof File, {
     message: 'Image is required'
@@ -32,7 +32,7 @@ export function CreateMarketPlaceItem() {
     defaultValues: {
       title: '',
       description: '',
-      price: '',
+      price: 0,
       size: '',
       image: undefined
     }
