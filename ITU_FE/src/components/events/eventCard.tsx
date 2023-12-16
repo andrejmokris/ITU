@@ -3,9 +3,40 @@ import { CardContent, Card } from '@/components/ui/card';
 import { ThriftEvent } from '@/types/event';
 import { api_client } from '@/utils/api-client';
 import { SVGProps } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { JSX } from 'react/jsx-runtime';
+import { toast } from '../ui/use-toast';
 
 export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent }) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationKey: ['toggleEventAttendance'],
+
+    mutationFn: async () => {
+      if (thriftEvent.EventParticipation.length > 0) {
+        const { data } = await api_client.delete(`/events/signup/${thriftEvent.id}`);
+        return data;
+      } else {
+        const { data } = await api_client.post(`/events/signup/${thriftEvent.id}`);
+        return data;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['eventsQuery'] });
+      toast({
+        title:
+          thriftEvent.EventParticipation.length > 0
+            ? 'You are signed out from the event'
+            : 'You are signed up for the event'
+      });
+    },
+    onError: () => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.'
+      });
+    }
+  });
   return (
     <Card className="bg-white shadow-md rounded-lg overflow-hidden w-full md:w-2/3 lg:w-1/3 mx-auto">
       <div className="relative">
@@ -39,9 +70,13 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
             Learn More
           </Button>
           {thriftEvent.EventParticipation.length > 0 ? (
-            <p className="text-red-500 hover:text-red-600 text-sm">Remove from calendar</p>
+            <button onClick={() => mutation.mutateAsync()} className="text-red-500 hover:text-red-600 text-sm">
+              Remove from calendar
+            </button>
           ) : (
-            <p className="text-blue-500 hover:text-blue-600 text-sm">Add to Calendar</p>
+            <button onClick={() => mutation.mutateAsync()} className="text-blue-500 hover:text-blue-600 text-sm">
+              Add to Calendar
+            </button>
           )}
         </div>
       </CardContent>
