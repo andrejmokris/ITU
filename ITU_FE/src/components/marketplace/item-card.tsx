@@ -26,7 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
+import { BookmarkMinus, BookmarkPlus, MoreHorizontal, Trash } from 'lucide-react';
 
 export function ItemCard({ item }: { item: MarketPlaceItem }) {
   const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
@@ -42,7 +42,7 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
   }
 
   function capitalizeWords(str: string) {
-    return str.replace(/\b\w/g, (char: string) => char.toUpperCase());
+    return str.replace(/^\w/, (c) => c.toUpperCase());
   }
 
   const apiURL = `${import.meta.env.VITE_API_URL}/api`;
@@ -90,6 +90,48 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
     }
   });
 
+  const saveBookmarkMutation = useMutation({
+    mutationKey: [`saveItem${item.id}`],
+
+    mutationFn: async () => {
+      const { data } = await api_client.post(`/marketplace/bookmark/${item.id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketPlaceQuery'] });
+      toast({
+        title: 'You have successfully saved the item'
+      });
+    },
+    onError: () => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.'
+      });
+    }
+  });
+
+  const deleteBookmarkMutation = useMutation({
+    mutationKey: [`removeItemFromSaved${item.id}`],
+
+    mutationFn: async () => {
+      const { data } = await api_client.delete(`/marketplace/bookmark/${item.ItemBookmark[0].id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketPlaceQuery'] });
+      toast({
+        title: 'Item removed from the saved'
+      });
+    },
+    onError: () => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.'
+      });
+    }
+  });
+
   return (
     <Card>
       <CardHeader>
@@ -117,14 +159,22 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {userStore.user?.id === item.seller.id && (
-                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Delete the post</DropdownMenuItem>
-                )}
-
                 {item.ItemBookmark.length > 0 ? (
-                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Unlike</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => deleteBookmarkMutation.mutateAsync()}>
+                    <BookmarkMinus className="w-4 mr-2" />
+                    Unsave
+                  </DropdownMenuItem>
                 ) : (
-                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Like</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => saveBookmarkMutation.mutateAsync()}>
+                    <BookmarkPlus className="w-4 mr-2" />
+                    Save
+                  </DropdownMenuItem>
+                )}
+                {userStore.user?.id === item.seller.id && (
+                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                    <Trash className="w-4 mr-2" />
+                    Delete the post
+                  </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>

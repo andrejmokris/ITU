@@ -119,3 +119,71 @@ export const getMarketPhoto = async (req: Request, res: Response, next: NextFunc
 
   res.sendFile(photo.image);
 };
+
+export const addBookmark = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userID = req.user;
+  const itemId = Number(req.params.id);
+
+  const findDuplicate = await prisma.itemBookmark.findFirst({
+    where: {
+      marketItemId: itemId,
+      buyerId: userID
+    }
+  });
+
+  if (findDuplicate) {
+    res.json(findDuplicate);
+    return;
+  }
+
+  const marketItem = await prisma.marketItem.findFirst({
+    where: {
+      id: itemId
+    }
+  });
+
+  if (!marketItem) {
+    next(new NotFoundError('Item not found'));
+    return;
+  }
+
+  const newBookMark = await prisma.itemBookmark.create({
+    data: {
+      buyerId: userID,
+      marketItemId: itemId
+    }
+  });
+
+  res.json(newBookMark);
+};
+
+export const removeBookmark = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userID = req.user;
+  const bookmarkId = Number(req.params.id);
+
+  const findItem = await prisma.itemBookmark.findFirst({
+    where: {
+      id: bookmarkId
+    }
+  });
+
+  if (!findItem) {
+    next(new NotFoundError('Item not found'));
+    return;
+  }
+
+  if (findItem.buyerId !== userID) {
+    next(new UnauthorizedError('Not authorized'));
+    return;
+  }
+
+  const removedBookmark = await prisma.itemBookmark.delete({
+    where: {
+      id: bookmarkId
+    }
+  });
+
+  res.json(removedBookmark);
+};

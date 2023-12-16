@@ -75,7 +75,7 @@ export function MarketplacePage() {
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Show sold items
+              Sold items
             </label>
           </div>
           <div className="flex items-center space-x-2">
@@ -84,7 +84,7 @@ export function MarketplacePage() {
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Show only saved items
+              Only saved items
             </label>
           </div>
         </div>
