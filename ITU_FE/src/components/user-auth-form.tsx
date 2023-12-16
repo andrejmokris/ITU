@@ -10,10 +10,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { api_client } from '@/utils/api-client';
+import useAuthStore from '@/store/user-store';
 
 export function UserAuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const userStore = useAuthStore();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -29,6 +31,7 @@ export function UserAuthForm() {
       const resp = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/log-in`, values);
       localStorage.setItem('authToken', resp.data.token);
       api_client.defaults.headers.common['Authorization'] = `Bearer ${resp.data.token}`;
+      await userStore.fetchUser();
       navigate('/');
     } catch (error) {
       form.setError('password', {

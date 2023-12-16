@@ -38,11 +38,11 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
     }
   });
   return (
-    <Card className="bg-white shadow-md rounded-lg overflow-hidden w-full md:w-2/3 lg:w-1/3 mx-auto">
+    <Card className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="relative">
         <img
           alt="Thrift show event"
-          className="w-full h-[] object-cover"
+          className="w-full object-cover"
           height="100"
           src={thriftEvent.imageURL ? thriftEvent.imageURL : 'https://generated.vusercontent.net/placeholder.svg'}
           style={{

@@ -22,6 +22,8 @@ model User {
   Message            Message[]
   Event              Event[]
   EventParticipation EventParticipation[]
+  MarketItem         MarketItem[]
+  ItemPurchase       ItemPurchase[]
 }
 
 model Shop {
@@ -121,4 +123,28 @@ model EventParticipation {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
+}
+
+model MarketItem {
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  sellerId     Int
+  seller       User           @relation(fields: [sellerId], references: [id])
+  price        Int
+  description  String
+  title        String
+  size         String
+  addInfo      String?
+  active       Boolean        @default(true)
+  image        String?
+  ItemPurchase ItemPurchase[]
+}
+
+model ItemPurchase {
+  id           Int        @id @default(autoincrement())
+  buyerId      Int
+  buyer        User       @relation(fields: [buyerId], references: [id])
+  marketItemId Int
+  marketItem   MarketItem @relation(fields: [marketItemId], references: [id])
+  purchaseDate DateTime   @default(now())
 }

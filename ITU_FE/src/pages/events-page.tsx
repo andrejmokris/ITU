@@ -22,13 +22,18 @@ export function EventsPage() {
   }
 
   return (
-    <div className="flex flex-col w-[min(1400px,95%)] items-center justify-center">
-      <h1 className="text-4xl font-bold">Events</h1>
-      <CreateEvent />
-      <div className="flex flex-wrap gap-4 w-full mt-4">
-        {isSuccess &&
-          data?.map((thriftEvent) => <EventCard thriftEvent={thriftEvent} key={`thriftEvent${thriftEvent.id}`} />)}
+    <main className="p-4 md:p-6 lg:p-8 w-full flex items-center justify-center">
+      <div className="flex flex-col w-[min(1400px,95%)] items-center justify-center">
+        <div className="flex w-full justify-between">
+          <h1 className="text-2xl font-semibold">Events</h1>
+          <CreateEvent />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isSuccess &&
+            data?.map((thriftEvent) => <EventCard thriftEvent={thriftEvent} key={`thriftEvent${thriftEvent.id}`} />)}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

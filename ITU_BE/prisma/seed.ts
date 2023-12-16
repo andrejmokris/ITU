@@ -59,7 +59,7 @@ async function main() {
     data: {
       userId: alice.id,
       shopId: shopA.id,
-      startGiven: 7,
+      starsGiven: 5,
       content:
         'Tento sekáč navštevujem najčastejšie z jednoduchého dôvodu. Je priamo v centre, kolekcie sa casto menia a ceny su prijemne.'
     }

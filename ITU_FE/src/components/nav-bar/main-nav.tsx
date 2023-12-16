@@ -12,6 +12,10 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     '/events': {
       name: 'Events',
       privateRoute: false
+    },
+    '/marketplace': {
+      name: 'Marketplace',
+      privateRoute: false
     }
   };
   return (

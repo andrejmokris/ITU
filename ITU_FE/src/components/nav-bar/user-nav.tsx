@@ -49,7 +49,7 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            localStorage.removeItem('authToken');
+            userStore.logout();
             navigate('/login');
           }}
         >
