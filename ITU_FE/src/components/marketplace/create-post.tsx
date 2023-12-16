@@ -18,7 +18,10 @@ const formSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
   price: z.string(),
-  size: z.string()
+  size: z.string(),
+  image: z.custom<File>((v) => v instanceof File, {
+    message: 'Image is required'
+  })
 });
 
 export function CreateMarketPlaceItem() {
@@ -30,7 +33,8 @@ export function CreateMarketPlaceItem() {
       title: '',
       description: '',
       price: '',
-      size: ''
+      size: '',
+      image: undefined
     }
   });
 
@@ -106,7 +110,19 @@ export function CreateMarketPlaceItem() {
                 )}
               />
             </div>
-
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { onChange } }) => (
+                <FormItem>
+                  <FormLabel>Item photo</FormLabel>
+                  <FormControl>
+                    <Input type="file" onChange={(e) => onChange(e.target.files?.[0])} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit">Create new post</Button>
           </form>
         </Form>

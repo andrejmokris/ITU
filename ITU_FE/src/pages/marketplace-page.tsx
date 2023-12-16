@@ -6,7 +6,6 @@ import { useSearchParams } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
 import { CreateMarketPlaceItem } from '@/components/marketplace/create-post';
 
 export type MarketPlaceItem = {
