@@ -6,6 +6,8 @@ import { useSearchParams } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { CreateMarketPlaceItem } from '@/components/marketplace/create-post';
 
 export type MarketPlaceItem = {
   id: number;
@@ -50,7 +52,11 @@ export function MarketplacePage() {
     <main className="p-4 md:p-6 lg:p-8 w-full flex items-center justify-center">
       <div className="flex flex-col w-[min(1400px,95%)] items-center justify-center">
         <div className="flex items-center justify-between mb-6 w-full">
-          <h1 className="text-2xl font-semibold">Marketplace</h1>
+          <div className="flex space-x-2">
+            <h1 className="text-2xl font-semibold">Marketplace</h1>
+            <CreateMarketPlaceItem />
+          </div>
+
           <div className="flex items-center">
             <SearchIcon className="h-4 w-4 text-gray-500" />
             <input
@@ -84,7 +90,7 @@ export function MarketplacePage() {
               htmlFor="terms"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Only saved items
+              Saved items
             </label>
           </div>
         </div>
