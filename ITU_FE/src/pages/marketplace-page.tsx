@@ -16,6 +16,11 @@ export type MarketPlaceItem = {
     name: string;
     id: number;
   };
+  ItemBookmark: Array<{
+    id: number;
+    buyerId: number;
+    marketItemId: number;
+  }>;
   size: string;
   addInfo: string;
   active: boolean;
@@ -24,6 +29,7 @@ export type MarketPlaceItem = {
 export function MarketplacePage() {
   const [searchParams, setSearchParams] = useSearchParams({ q: '' });
   const [showSold, setShowSold] = useState(false);
+  const [showSaved, setShowSaved] = useState(false);
   const q = searchParams.get('q');
 
   // @ts-expect-error works
@@ -35,6 +41,7 @@ export function MarketplacePage() {
       const { data } = await api_client.get('marketplace', {
         params: searchParams
       });
+      console.log(data);
       return data as Array<MarketPlaceItem>;
     }
   });
@@ -61,7 +68,7 @@ export function MarketplacePage() {
             />
           </div>
         </div>
-        <div className="w-full flex justify-start">
+        <div className="w-full flex justify-start space-x-10">
           <div className="flex items-center space-x-2">
             <Checkbox id="terms" checked={showSold} onCheckedChange={() => setShowSold(!showSold)} />
             <label
@@ -71,14 +78,31 @@ export function MarketplacePage() {
               Show sold items
             </label>
           </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox id="terms" checked={showSaved} onCheckedChange={() => setShowSaved(!showSaved)} />
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Show only saved items
+            </label>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          {showSold
-            ? data?.map((item) => <ItemCard item={item} key={`marketPlaceItem${item.id}`} />)
-            : data
-                ?.filter((item) => item.active)
-                .map((item) => <ItemCard item={item} key={`marketPlaceItem${item.id}`} />)}
+          {(() => {
+            const filteredItems = data?.filter(
+              (item) => (item.active || showSold) && ((showSaved && item.ItemBookmark.length > 0) || !showSaved)
+            );
+
+            return filteredItems && filteredItems.length > 0 ? (
+              filteredItems.map((item) => <ItemCard item={item} key={`marketPlaceItem${item.id}`} />)
+            ) : (
+              <p className="font-semibold text-2xl text-red-400 text-center col-span-1 md:col-span-2 lg:col-span-3">
+                No items found
+              </p>
+            );
+          })()}
         </div>
       </div>
     </main>

@@ -3,6 +3,8 @@ import prisma from '../db';
 import { ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors';
 
 export const getAllItems = async (req: Request, res: Response) => {
+  // @ts-expect-error
+  const userID = req.user;
   const { q } = req.query;
 
   const query = String(q);
@@ -19,6 +21,11 @@ export const getAllItems = async (req: Request, res: Response) => {
         select: {
           name: true,
           id: true
+        }
+      },
+      ItemBookmark: {
+        where: {
+          buyerId: userID
         }
       }
     }

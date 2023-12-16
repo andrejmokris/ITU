@@ -107,21 +107,27 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
           </div>
 
           <div>
-            {userStore.user?.id === item.seller.id && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {userStore.user?.id === item.seller.id && (
                   <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Delete the post</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+                )}
+
+                {item.ItemBookmark.length > 0 ? (
+                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Unlike</DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Like</DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </CardHeader>

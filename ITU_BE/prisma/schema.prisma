@@ -24,6 +24,7 @@ model User {
   EventParticipation EventParticipation[]
   MarketItem         MarketItem[]
   ItemPurchase       ItemPurchase[]
+  ItemBookmark       ItemBookmark[]
 }
 
 model Shop {
@@ -138,6 +139,7 @@ model MarketItem {
   active       Boolean        @default(true)
   image        String?
   ItemPurchase ItemPurchase[]
+  ItemBookmark ItemBookmark[]
 }
 
 model ItemPurchase {
@@ -147,4 +149,12 @@ model ItemPurchase {
   marketItemId Int
   marketItem   MarketItem @relation(fields: [marketItemId], references: [id])
   purchaseDate DateTime   @default(now())
+}
+
+model ItemBookmark {
+  id           Int        @id @default(autoincrement())
+  buyerId      Int
+  buyer        User       @relation(fields: [buyerId], references: [id])
+  marketItemId Int
+  marketItem   MarketItem @relation(fields: [marketItemId], references: [id])
 }
