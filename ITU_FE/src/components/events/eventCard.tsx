@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { CardContent, Card } from '@/components/ui/card';
 import { ThriftEvent } from '@/types/event';
+import { api_client } from '@/utils/api-client';
 import { SVGProps } from 'react';
 import { JSX } from 'react/jsx-runtime';
 
@@ -23,7 +24,11 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
           <h3 className="text-xl font-semibold">{thriftEvent.title}</h3>
           <p className="text-sm">
             <CalendarDaysIcon className="inline-block mr-1 h-4 w-4" />
-            December 30, 2023
+            {new Date(thriftEvent.startDate).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric'
+            })}
           </p>
         </div>
       </div>
@@ -33,7 +38,11 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
           <Button className="text-sm" variant="outline">
             Learn More
           </Button>
-          <p className="text-blue-500 hover:text-blue-600 text-sm">Add to Calendar</p>
+          {thriftEvent.EventParticipation.length > 0 ? (
+            <p className="text-red-500 hover:text-red-600 text-sm">Remove from calendar</p>
+          ) : (
+            <p className="text-blue-500 hover:text-blue-600 text-sm">Add to Calendar</p>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -7,15 +7,17 @@ import newEventScheme from '../schemas/newEventScheme';
 
 const eventRoutes = Router();
 
+eventRoutes.use(authMiddleware);
+
 eventRoutes.get('/', eventController.findEvents);
 
-eventRoutes.get('/calendar', authMiddleware, eventController.myCalendar);
+eventRoutes.get('/calendar', eventController.myCalendar);
 
 eventRoutes.get('/:id', validateParams(routeIdScheme), eventController.findEventById);
 
-eventRoutes.use(authMiddleware);
-
 eventRoutes.post('/', validate(newEventScheme), eventController.createEvent);
+
+eventRoutes.get('/me/:id', validateParams(routeIdScheme), eventController.doIAttent);
 
 eventRoutes.post('/signup/:id', validateParams(routeIdScheme), eventController.signUpToEvent);
 

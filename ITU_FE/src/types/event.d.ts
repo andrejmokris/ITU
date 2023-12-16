@@ -4,4 +4,7 @@ export type ThriftEvent = {
   title: string;
   description: string;
   imageURL?: string;
+  EventParticipation: Array<{
+    userId: number;
+  }>;
 };

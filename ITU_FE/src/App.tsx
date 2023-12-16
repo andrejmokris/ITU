@@ -11,6 +11,7 @@ import { Footer } from './components/footer';
 import { ShopDetailPage } from './pages/shop-detail-page';
 import useAuthStore from './store/user-store';
 import { EventsPage } from './pages/events-page';
+import { CalendarPage } from './pages/calendar-page';
 
 function App() {
   const currentPath = useLocation();
@@ -55,6 +56,7 @@ function App() {
           <Route path="/events" Component={EventsPage} />
           <Route path="/login" Component={LogInPage} />
           <Route path="/shop/:id" Component={ShopDetailPage} />
+          <Route path="/calendar" Component={CalendarPage} />
         </Routes>
         <Toaster />
         {!location.pathname.startsWith('/login') && <Footer />}

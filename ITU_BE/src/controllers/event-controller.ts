@@ -5,7 +5,18 @@ import newEventScheme from '../schemas/newEventScheme';
 import { z } from 'zod';
 
 export const findEvents = async (req: Request, res: Response, next: NextFunction) => {
-  const events = await prisma.event.findMany();
+  // @ts-expect-error
+  const userId = Number(req.user);
+
+  const events = await prisma.event.findMany({
+    include: {
+      EventParticipation: {
+        where: {
+          userId: userId
+        }
+      }
+    }
+  });
   res.json(events);
 };
 
@@ -118,4 +129,23 @@ export const myCalendar = async (req: Request, res: Response, next: NextFunction
   });
 
   res.json(myParticipations);
+};
+
+export const doIAttent = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userId = Number(req.user);
+  const eventId = Number(req.params.id);
+
+  const myAttendance = await prisma.eventParticipation.findFirst({
+    where: {
+      eventId: eventId,
+      userId: userId
+    }
+  });
+
+  if (myAttendance) {
+    res.json({ status: true });
+  } else {
+    res.json({ status: false });
+  }
 };

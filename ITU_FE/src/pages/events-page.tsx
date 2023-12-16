@@ -5,7 +5,7 @@ import { api_client } from '@/utils/api-client';
 import { useQuery } from 'react-query';
 
 export function EventsPage() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isSuccess } = useQuery({
     queryKey: ['eventsQuery'],
     queryFn: async () => {
       const { data } = await api_client.get('events');
@@ -26,9 +26,8 @@ export function EventsPage() {
       <h1 className="text-4xl font-bold">Events</h1>
       <CreateEvent />
       <div className="flex flex-wrap gap-4 w-full mt-4">
-        {data?.map((thriftEvent) => (
-          <EventCard thriftEvent={thriftEvent} key={`thriftEvent${thriftEvent.id}`} />
-        ))}
+        {isSuccess &&
+          data?.map((thriftEvent) => <EventCard thriftEvent={thriftEvent} key={`thriftEvent${thriftEvent.id}`} />)}
       </div>
     </div>
   );
