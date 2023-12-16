@@ -41,8 +41,8 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate('/calendar')}>Calendar</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate('/myorders')}>My orders</DropdownMenuItem>
           <DropdownMenuItem>Notifications</DropdownMenuItem>
           <DropdownMenuItem>Follows</DropdownMenuItem>
         </DropdownMenuGroup>

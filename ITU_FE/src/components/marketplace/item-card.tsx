@@ -17,9 +17,21 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { api_client } from '@/utils/api-client';
 import { toast } from '../ui/use-toast';
+import useAuthStore from '@/store/user-store';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu';
+import { MoreHorizontal } from 'lucide-react';
 
 export function ItemCard({ item }: { item: MarketPlaceItem }) {
   const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const userStore = useAuthStore();
 
   let properties;
 
@@ -57,18 +69,59 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
     }
   });
 
+  const deleteMutation = useMutation({
+    mutationKey: ['deleteItem'],
+
+    mutationFn: async () => {
+      const { data } = await api_client.delete(`/marketplace/${item.id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketPlaceQuery'] });
+      toast({
+        title: 'You have successfully deleted the item'
+      });
+    },
+    onError: () => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.'
+      });
+    }
+  });
+
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarImage src="/placeholdefffr.svg" />
-            <AvatarFallback>{item.seller.name[0]}</AvatarFallback>
-          </Avatar>
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage src="/placeholdefffr.svg" />
+              <AvatarFallback>{item.seller.name[0]}</AvatarFallback>
+            </Avatar>
+
+            <div>
+              <h2 className="text-lg font-semibold">{capitalizeWords(item.title)}</h2>
+              <span className="text-sm text-gray-500">Posted by {item.seller.name}</span>
+            </div>
+          </div>
 
           <div>
-            <h2 className="text-lg font-semibold">{capitalizeWords(item.title)}</h2>
-            <span className="text-sm text-gray-500">Posted by {item.seller.name}</span>
+            {userStore.user?.id === item.seller.id && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Delete the post</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </CardHeader>
@@ -90,7 +143,11 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
         <Badge className="mr-2">Size: {item.size}</Badge>
         {properties.color && <Badge className="mr-2">Color: {properties.color}</Badge>}
         <Badge>${item.price}</Badge>
-        <Button className="ml-auto" onClick={() => setPurchaseDialogOpen(true)} disabled={!item.active}>
+        <Button
+          className="ml-auto"
+          onClick={() => setPurchaseDialogOpen(true)}
+          disabled={!item.active || item.seller.id === userStore.user?.id}
+        >
           {item.active ? 'Buy Now' : 'Not available'}
         </Button>
       </CardFooter>
@@ -103,6 +160,20 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => mutation.mutateAsync()}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {`This action cannot be undone. This will permanently delete the ${item.title} from the marketplace.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteMutation.mutateAsync()}>Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

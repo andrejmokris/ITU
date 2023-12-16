@@ -13,6 +13,7 @@ import useAuthStore from './store/user-store';
 import { EventsPage } from './pages/events-page';
 import { CalendarPage } from './pages/calendar-page';
 import { MarketplacePage } from './pages/marketplace-page';
+import { MyOrdersPage } from './pages/my-orders';
 
 function App() {
   const currentPath = useLocation();
@@ -59,6 +60,7 @@ function App() {
           <Route path="/shop/:id" Component={ShopDetailPage} />
           <Route path="/calendar" Component={CalendarPage} />
           <Route path="/marketplace" Component={MarketplacePage} />
+          <Route path="/myorders" Component={MyOrdersPage} />
         </Routes>
         <Toaster />
         {!location.pathname.startsWith('/login') && <Footer />}
