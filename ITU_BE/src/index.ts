@@ -12,7 +12,7 @@ import eventRoutes from './routes/event-routes';
 import marketPlaceRouter from './routes/marketplace-routes';
 
 const app = express();
-const port = 3000;
+const port = Number(process.env.PORT) || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,6 +43,6 @@ app.use('/api/marketplace', marketPlaceRouter);
 
 app.use(errorMiddleware);
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });

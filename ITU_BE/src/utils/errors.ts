@@ -27,7 +27,6 @@ export class ValidationError extends AppError {
 
   constructor(message?: string, errors?: any[]) {
     super(message || 'Invalid or missing request data.', 'BAD_REQUEST', 400);
-    // @ts-expect-error
     this.errors = errors;
   }
 }
