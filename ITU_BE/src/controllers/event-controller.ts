@@ -3,6 +3,7 @@ import prisma from '../db';
 import { ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors';
 import newEventScheme from '../schemas/newEventScheme';
 import { z } from 'zod';
+import { nextTick } from 'process';
 
 export const findEvents = async (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
@@ -46,6 +47,38 @@ export const createEvent = async (req: Request, res: Response, next: NextFunctio
       startDate: eventData.body.startDate,
       imageURL: eventData.body.imageURL
     }
+  });
+
+  res.json(newEvent);
+};
+
+export const editEvent = async (req: Request, res: Response, next: NextFunction) => {
+  const eventData = req as z.infer<typeof newEventScheme>;
+  // @ts-expect-error
+  const userId = Number(req.user);
+  const eventId = Number(req.params.id);
+
+  const findEvent = await prisma.event.findFirst({
+    where: {
+      id: eventId
+    }
+  });
+
+  if (!findEvent) {
+    next(new NotFoundError('Event not found'));
+    return;
+  }
+
+  if (findEvent.authorId !== userId) {
+    next(new UnauthorizedError('You cant do that'));
+    return;
+  }
+
+  const newEvent = await prisma.event.update({
+    where: {
+      id: eventId
+    },
+    data: eventData.body
   });
 
   res.json(newEvent);

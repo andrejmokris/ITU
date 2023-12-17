@@ -54,7 +54,6 @@ export function CalendarPage() {
     queryKey: 'getMyCalendarQuery',
     queryFn: async () => {
       const { data } = await api_client.get('events/calendar');
-      console.log(data);
       return data as Array<CalendarItem>;
     }
   });

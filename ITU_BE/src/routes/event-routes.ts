@@ -14,6 +14,8 @@ eventRoutes.get('/', eventController.findEvents);
 eventRoutes.get('/calendar', eventController.myCalendar);
 
 eventRoutes.get('/:id', validateParams(routeIdScheme), eventController.findEventById);
+
+eventRoutes.put('/:id', [validateParams(routeIdScheme), validate(newEventScheme)], eventController.editEvent);
 eventRoutes.delete('/:id', validateParams(routeIdScheme), eventController.deleteEvent);
 
 eventRoutes.post('/', validate(newEventScheme), eventController.createEvent);

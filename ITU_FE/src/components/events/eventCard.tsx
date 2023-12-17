@@ -25,11 +25,13 @@ import {
   AlertDialogTitle
 } from '@/components/ui/alert-dialog';
 import { CalendarDaysIcon, FileEdit, MoreHorizontal, Trash } from 'lucide-react';
+import { EditEvent } from './editEvent';
 
 export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent }) {
   const queryClient = useQueryClient();
   const userStore = useAuthStore();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const mutation = useMutation({
     mutationKey: ['toggleEventAttendance'],
@@ -121,9 +123,9 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {userStore.user?.id === thriftEvent.authorId && (
-                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                   <FileEdit className="w-4 mr-2" />
-                  Edit the post
+                  Edit the event
                 </DropdownMenuItem>
               )}
               {userStore.user?.id === thriftEvent.authorId && (
@@ -167,6 +169,7 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <EditEvent thriftEvent={thriftEvent} open={isEditDialogOpen} setOpen={setIsEditDialogOpen} />
     </Card>
   );
 }

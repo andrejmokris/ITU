@@ -42,7 +42,6 @@ export function MarketplacePage() {
       const { data } = await api_client.get('marketplace', {
         params: searchParams
       });
-      console.log(data);
       return data as Array<MarketPlaceItem>;
     }
   });

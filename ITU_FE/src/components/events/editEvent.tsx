@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { api_client } from '@/utils/api-client';
 import { toast } from '../ui/use-toast';
-import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -15,6 +14,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ThriftEvent } from '@/types/event';
 
 const formSchema = z.object({
   title: z.string(),
@@ -23,28 +23,37 @@ const formSchema = z.object({
   startDate: z.date()
 });
 
-export function CreateEvent() {
-  const [open, setOpen] = useState(false);
+export function EditEvent({
+  thriftEvent,
+  open,
+  setOpen
+}: {
+  thriftEvent: ThriftEvent;
+  open: boolean;
+  setOpen: (x: boolean) => void;
+}) {
   const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: ''
+      title: thriftEvent.title,
+      description: thriftEvent.description,
+      imageURL: thriftEvent.imageURL ? thriftEvent.imageURL : undefined,
+      startDate: new Date(thriftEvent.startDate)
     }
   });
 
   const mutation = useMutation({
     mutationKey: ['createEventMutation'],
     mutationFn: async (formData: z.infer<typeof formSchema>) => {
-      const { data } = await api_client.post('/events', formData);
+      const { data } = await api_client.put(`/events/${thriftEvent.id}`, formData);
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['eventsQuery'] });
       toast({
-        title: 'New even Created'
+        title: 'Changes saved!'
       });
       setOpen(false);
     },
@@ -62,12 +71,9 @@ export function CreateEvent() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Create new Event</Button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create new Event</DialogTitle>
+          <DialogTitle>Edit Event</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex flex-col">
@@ -140,8 +146,7 @@ export function CreateEvent() {
                 </FormItem>
               )}
             />
-
-            <Button type="submit">Create a new Event</Button>
+            <Button type="submit">Save changes</Button>
           </form>
         </Form>
       </DialogContent>

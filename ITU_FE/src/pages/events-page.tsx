@@ -9,7 +9,6 @@ export function EventsPage() {
     queryKey: ['eventsQuery'],
     queryFn: async () => {
       const { data } = await api_client.get('events');
-      console.log(data);
       return data as Array<ThriftEvent>;
     }
   });
