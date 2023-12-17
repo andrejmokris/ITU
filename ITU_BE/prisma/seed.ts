@@ -64,7 +64,16 @@ async function main() {
         'Tento sekáč navštevujem najčastejšie z jednoduchého dôvodu. Je priamo v centre, kolekcie sa casto menia a ceny su prijemne.'
     }
   });
-  console.log({ alice, bob, shopA, shopB, shopC, reviewA });
+  const eventA = await prisma.event.create({
+    data: {
+      authorId: bob.id,
+      title: 'Christmas charity donation',
+      description:
+        'Come to the charity house at tr. Kpt. Jarose 9 in Brno and donate your clothes to the the people, who can not afford it',
+      startDate: '2023-12-21T23:00:00.000Z'
+    }
+  });
+  console.log({ alice, bob, shopA, shopB, shopC, reviewA, eventA });
 }
 main()
   .then(async () => {

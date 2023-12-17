@@ -13,7 +13,7 @@ import useAuthStore from './store/user-store';
 import { EventsPage } from './pages/events-page';
 import { CalendarPage } from './pages/calendar-page';
 import { MarketplacePage } from './pages/marketplace-page';
-import { MyOrdersPage } from './pages/my-orders';
+import { MyOrdersPage } from './pages/MyOrders/my-orders';
 
 function App() {
   const currentPath = useLocation();

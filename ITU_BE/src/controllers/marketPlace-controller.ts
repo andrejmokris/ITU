@@ -221,3 +221,19 @@ export const removeBookmark = async (req: Request, res: Response, next: NextFunc
 
   res.json(removedBookmark);
 };
+
+export const getMyOrders = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userID = req.user;
+
+  const myOrders = await prisma.itemPurchase.findMany({
+    where: {
+      buyerId: userID
+    },
+    include: {
+      marketItem: true
+    }
+  });
+
+  res.json(myOrders);
+};

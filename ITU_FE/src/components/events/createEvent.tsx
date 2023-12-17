@@ -42,7 +42,7 @@ export function CreateEvent() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['getAllevenQuery'] });
+      queryClient.invalidateQueries({ queryKey: ['eventsQuery'] });
       toast({
         title: 'New even Created'
       });
@@ -105,7 +105,7 @@ export function CreateEvent() {
               name="imageURL"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>even Image URL</FormLabel>
+                  <FormLabel>Event image URL</FormLabel>
                   <FormControl>
                     <Input placeholder="This will be the..." type="text" {...field} />
                   </FormControl>
@@ -119,7 +119,7 @@ export function CreateEvent() {
               name="startDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Date of birth</FormLabel>
+                  <FormLabel>Date of event</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>

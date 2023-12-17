@@ -11,6 +11,8 @@ marketPlaceRouter.get('/photo/:id', validateParams(routeIdScheme), MarketPlaceCo
 
 marketPlaceRouter.use(authMiddleware);
 
+marketPlaceRouter.get('/myorders', MarketPlaceController.getMyOrders);
+
 marketPlaceRouter.get('/', MarketPlaceController.getAllItems);
 
 marketPlaceRouter.post('/', upload.single('image'), MarketPlaceController.createItem);

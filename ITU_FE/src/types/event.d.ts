@@ -7,4 +7,5 @@ export type ThriftEvent = {
   EventParticipation: Array<{
     userId: number;
   }>;
+  authorId: number;
 };

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import prisma from '../db';
-import { ConflictError, NotFoundError } from '../utils/errors';
+import { ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors';
 import newEventScheme from '../schemas/newEventScheme';
 import { z } from 'zod';
 
@@ -102,7 +102,7 @@ export const signOutOfEvent = async (req: Request, res: Response, next: NextFunc
   });
 
   if (!exisitingParticipation) {
-    next(new NotFoundError('Pa'));
+    next(new NotFoundError('Participation not found'));
     return;
   }
 
@@ -148,4 +148,34 @@ export const doIAttent = async (req: Request, res: Response, next: NextFunction)
   } else {
     res.json({ status: false });
   }
+};
+
+export const deleteEvent = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userId = Number(req.user);
+  const eventId = Number(req.params.id);
+
+  const findEvent = await prisma.event.findFirst({
+    where: {
+      id: eventId
+    }
+  });
+
+  if (!findEvent) {
+    next(new NotFoundError('Event not found'));
+    return;
+  }
+
+  if (findEvent.authorId !== userId) {
+    next(new UnauthorizedError('Not authorized'));
+    return;
+  }
+
+  const deletedEvent = await prisma.event.delete({
+    where: {
+      id: findEvent.id
+    }
+  });
+
+  res.json(deletedEvent);
 };

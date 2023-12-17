@@ -52,7 +52,7 @@ export function MarketplacePage() {
       <div className="flex flex-col w-[min(1400px,95%)] items-center justify-center">
         <div className="flex items-center justify-between mb-6 w-full">
           <div className="flex space-x-2">
-            <h1 className="text-2xl font-semibold">Marketplace</h1>
+            <h1 className="text-md sm:text-xl md:text-2xl font-semibold">Marketplace</h1>
             <CreateMarketPlaceItem />
           </div>
 

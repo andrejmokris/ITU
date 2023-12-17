@@ -2,16 +2,37 @@ import { Button } from '@/components/ui/button';
 import { CardContent, Card } from '@/components/ui/card';
 import { ThriftEvent } from '@/types/event';
 import { api_client } from '@/utils/api-client';
-import { SVGProps } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { JSX } from 'react/jsx-runtime';
 import { toast } from '../ui/use-toast';
+import useAuthStore from '@/store/user-store';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '../ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/alert-dialog';
+import { CalendarDaysIcon, FileEdit, MoreHorizontal, Trash } from 'lucide-react';
 
 export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent }) {
   const queryClient = useQueryClient();
+  const userStore = useAuthStore();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const mutation = useMutation({
     mutationKey: ['toggleEventAttendance'],
-
     mutationFn: async () => {
       if (thriftEvent.EventParticipation.length > 0) {
         const { data } = await api_client.delete(`/events/signup/${thriftEvent.id}`);
@@ -37,6 +58,28 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
       });
     }
   });
+
+  const deleteEventMutation = useMutation({
+    mutationKey: ['deleteEventAttendance'],
+
+    mutationFn: async () => {
+      const { data } = await api_client.delete(`/events/${thriftEvent.id}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['eventsQuery'] });
+      toast({
+        title: 'Event deleted from the database'
+      });
+    },
+    onError: () => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.'
+      });
+    }
+  });
+
   return (
     <Card className="bg-white shadow-md rounded-lg overflow-hidden">
       <div className="relative">
@@ -44,7 +87,11 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
           alt="Thrift show event"
           className="w-full object-cover"
           height="100"
-          src={thriftEvent.imageURL ? thriftEvent.imageURL : 'https://generated.vusercontent.net/placeholder.svg'}
+          src={
+            thriftEvent.imageURL
+              ? thriftEvent.imageURL
+              : 'https://sustainablefashionconsumption.org/wp-content/uploads/2022/02/Karpova.jpg'
+          }
           style={{
             aspectRatio: '400/200',
             objectFit: 'cover'
@@ -61,6 +108,32 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
               year: 'numeric'
             })}
           </p>
+        </div>
+        <div className="absolute top-2 right-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {userStore.user?.id === thriftEvent.authorId && (
+                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                  <FileEdit className="w-4 mr-2" />
+                  Edit the post
+                </DropdownMenuItem>
+              )}
+              {userStore.user?.id === thriftEvent.authorId && (
+                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                  <Trash className="w-4 mr-2" />
+                  Delete the event
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <CardContent className="space-y-2 p-4">
@@ -80,34 +153,20 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
           )}
         </div>
       </CardContent>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {`This action cannot be undone. This will permanently delete the ${thriftEvent.title} from the system.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteEventMutation.mutateAsync()}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
-  );
-}
-
-function CalendarDaysIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-      <path d="M8 14h.01" />
-      <path d="M12 14h.01" />
-      <path d="M16 14h.01" />
-      <path d="M8 18h.01" />
-      <path d="M12 18h.01" />
-      <path d="M16 18h.01" />
-    </svg>
   );
 }

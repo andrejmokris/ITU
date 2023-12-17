@@ -43,8 +43,6 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate('/calendar')}>Calendar</DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate('/myorders')}>My orders</DropdownMenuItem>
-          <DropdownMenuItem>Notifications</DropdownMenuItem>
-          <DropdownMenuItem>Follows</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
