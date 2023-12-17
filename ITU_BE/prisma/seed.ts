@@ -8,7 +8,7 @@ async function main() {
     update: {},
     create: {
       email: 'alice@prisma.io',
-      name: 'Alice',
+      name: 'Alice Garcia',
       password: await hashPassword('passwordAlice')
     }
   });
@@ -17,8 +17,17 @@ async function main() {
     update: {},
     create: {
       email: 'bob@prisma.io',
-      name: 'Bob',
+      name: 'Bob Marley',
       password: await hashPassword('passwordBob')
+    }
+  });
+  const erling = await prisma.user.upsert({
+    where: { email: 'erling@prisma.io' },
+    update: {},
+    create: {
+      email: 'erling@prisma.io',
+      name: 'Erling Haaland',
+      password: await hashPassword('passwordErling')
     }
   });
   const shopA = await prisma.shop.create({
@@ -55,6 +64,28 @@ async function main() {
       latitude: 16.60423802448318
     }
   });
+  const shopD = await prisma.shop.create({
+    data: {
+      title: 'Slow Bazar Praha',
+      address: 'Řeznická 1741, 110 00 Nové Město, Praha',
+      description:
+        'low Bazar prodává prémiovou značkovou módu z druhé ruky. Čeká vás tu pestrá nabídka značek, kvalitní zboží, špičkový zákaznický servis a příjemná atmosféra.',
+      imageURL: 'https://lh5.googleusercontent.com/p/AF1QipNgPHtvP89Ezq0jqb6xaAVDuDKDNRB2M9HnN1XM=w408-h306-k-no',
+      longitude: 50.07820694574507,
+      latitude: 14.42434668415572
+    }
+  });
+  const shopE = await prisma.shop.create({
+    data: {
+      title: 'Textil House - vintage shop',
+      address: 'Orlí 477/16, 602 00 Brno-střed',
+      description:
+        'low Bazar prodává prémiovou značkovou módu z druhé ruky. Čeká vás tu pestrá nabídka značek, kvalitní zboží, špičkový zákaznický servis a příjemná atmosféra.',
+      imageURL: 'https://lh5.googleusercontent.com/p/AF1QipOGgBIO-ms3DHS5OuBxKZr5LqTF7odnSel_cuLT=w408-h306-k-no',
+      longitude: 49.19334624256341,
+      latitude: 16.61118024721986
+    }
+  });
   const reviewA = await prisma.review.create({
     data: {
       userId: alice.id,
@@ -73,7 +104,7 @@ async function main() {
       startDate: '2023-12-21T23:00:00.000Z'
     }
   });
-  console.log({ alice, bob, shopA, shopB, shopC, reviewA, eventA });
+  console.log({ alice, bob, erling, shopA, shopB, shopC, shopD, shopE, reviewA, eventA });
 }
 main()
   .then(async () => {
