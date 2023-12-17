@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { api_client } from '@/utils/api-client';
 import { useQuery } from 'react-query';
 import {

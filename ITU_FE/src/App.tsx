@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ModeToggle } from './components/mode-toggle';
 import { UserNav } from './components/nav-bar/user-nav';

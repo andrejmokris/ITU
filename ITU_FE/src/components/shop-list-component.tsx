@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { useNavigate } from 'react-router-dom';
 import { Shop } from '../types/shop';
 import { calculateDistance } from '../utils/geo';

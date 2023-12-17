@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Nespor xnespo10
+ */
+
 import { Button } from '@/components/ui/button';
 import { CardContent, Card } from '@/components/ui/card';
 import { ThriftEvent } from '@/types/event';

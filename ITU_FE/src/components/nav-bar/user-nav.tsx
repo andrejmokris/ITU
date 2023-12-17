@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {

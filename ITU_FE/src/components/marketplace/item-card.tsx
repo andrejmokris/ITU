@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CardHeader, CardContent, CardFooter, Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

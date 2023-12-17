@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { useQuery } from 'react-query';
 import { Button } from '../ui/button';
 import { ReviewCard } from './review-card';

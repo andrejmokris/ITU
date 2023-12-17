@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Nespor xnespo10
+ */
+
 import { CreateEvent } from '@/components/events/createEvent';
 import EventCard from '@/components/events/eventCard';
 import { ThriftEvent } from '@/types/event';

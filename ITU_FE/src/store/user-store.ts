@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { User } from '@/types/user';
 import axios from 'axios';
 import { create } from 'zustand';

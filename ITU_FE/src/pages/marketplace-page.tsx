@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { SearchIcon } from 'lucide-react';
 import { ItemCard } from '@/components/marketplace/item-card';
 import { useQuery } from 'react-query';

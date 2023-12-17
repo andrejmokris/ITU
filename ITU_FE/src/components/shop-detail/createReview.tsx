@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

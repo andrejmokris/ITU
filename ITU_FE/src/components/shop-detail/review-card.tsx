@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { Review } from '@/types/review';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Icons } from '../ui/icons';

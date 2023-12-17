@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { Moon, Sun } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';

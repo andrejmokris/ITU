@@ -1,10 +1,14 @@
-import z from "zod";
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
+import z from 'zod';
 
 export const loginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(1).max(50),
+  password: z.string().min(1).max(50)
 });
 
 export const tokenSchema = z.object({
-  token: z.string().min(1),
+  token: z.string().min(1)
 });

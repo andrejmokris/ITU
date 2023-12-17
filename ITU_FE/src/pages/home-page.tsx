@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import { useQuery } from 'react-query';
 import { Shop } from '@/types/shop';

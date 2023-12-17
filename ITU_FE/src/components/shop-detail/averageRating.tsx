@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { Icons } from '../ui/icons';
 
 export function AverageRating({ average, nOfReviews }: { average: number; nOfReviews: number }) {

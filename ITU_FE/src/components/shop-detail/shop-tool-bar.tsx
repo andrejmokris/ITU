@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { Shop } from '@/types/shop';
 import { Icons } from '../ui/icons';
 import { useMutation, useQuery, useQueryClient } from 'react-query';

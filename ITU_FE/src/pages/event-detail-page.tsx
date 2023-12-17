@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Nespor xnespo10
+ */
+
 import { useParams } from 'react-router-dom';
 import { CardTitle, CardHeader, CardContent, Card } from '@/components/ui/card';
 import { UserIcon } from 'lucide-react';

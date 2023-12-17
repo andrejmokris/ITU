@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Nespor xnespo10
+ */
+
 import { CardHeader, CardContent, Card, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Button } from '../ui/button';

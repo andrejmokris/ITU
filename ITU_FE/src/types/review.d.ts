@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 export type Review = {
   id: number;
   createdAt: string;

@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { useState } from 'react';
 
 export default function useDragDrop() {

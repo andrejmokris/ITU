@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import { useQuery } from 'react-query';

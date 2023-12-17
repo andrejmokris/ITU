@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { ModeToggle } from '@/components/mode-toggle';
 import { buttonVariants } from '@/components/ui/button';
 import { UserAuthForm } from '@/components/user-auth-form';

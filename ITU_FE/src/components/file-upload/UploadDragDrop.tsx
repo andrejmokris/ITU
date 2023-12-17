@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import useDragDrop from '@/hooks/useDragDrop';

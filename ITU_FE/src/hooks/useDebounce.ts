@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Mokris xmokri01
+ */
+
 import { useEffect, useState } from 'react';
 
 export default function useDebounce(value: string, delay: number = 500) {

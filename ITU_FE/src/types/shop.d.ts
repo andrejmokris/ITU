@@ -1,3 +1,7 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
+
 type ShopTag = {
   id: number;
   shopId: number;

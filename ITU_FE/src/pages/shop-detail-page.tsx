@@ -1,3 +1,6 @@
+/**
+ * Author: Veronika Simkova xsimko14
+ */
 import UploadComponent from '@/components/file-upload/UploadDragDrop';
 import { AverageRating } from '@/components/shop-detail/averageRating';
 import { ReviewSection } from '@/components/shop-detail/reviews-section';

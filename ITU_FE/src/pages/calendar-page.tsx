@@ -1,3 +1,7 @@
+/**
+ * Author: Andrej Nespor xnespo10
+ */
+
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import {
   add,
