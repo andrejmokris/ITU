@@ -17,6 +17,8 @@ marketPlaceRouter.get('/', MarketPlaceController.getAllItems);
 
 marketPlaceRouter.post('/', upload.single('image'), MarketPlaceController.createItem);
 
+marketPlaceRouter.put('/:id', validateParams(routeIdScheme), MarketPlaceController.updateItem);
+
 marketPlaceRouter.post('/bookmark/:id', validateParams(routeIdScheme), MarketPlaceController.addBookmark);
 marketPlaceRouter.delete('/bookmark/:id', validateParams(routeIdScheme), MarketPlaceController.removeBookmark);
 

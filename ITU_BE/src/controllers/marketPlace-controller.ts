@@ -59,6 +59,43 @@ export const createItem = async (req: Request, res: Response, next: NextFunction
   res.json(newItem);
 };
 
+export const updateItem = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userID = req.user;
+  const itemID = Number(req.params.id);
+  const data = req as z.infer<typeof newMarketItemScheme>;
+
+  const origItem = await prisma.marketItem.findFirst({
+    where: {
+      id: itemID
+    }
+  });
+
+  if (!origItem) {
+    next(new NotFoundError('Item not found'));
+    return;
+  }
+
+  if (origItem.sellerId !== userID) {
+    next(new UnauthorizedError('Not authorized'));
+    return;
+  }
+
+  const newItem = await prisma.marketItem.update({
+    where: {
+      id: itemID
+    },
+    data: {
+      title: data.body.title,
+      description: data.body.description,
+      size: data.body.size,
+      price: Number(data.body.price)
+    }
+  });
+
+  res.json(newItem);
+};
+
 export const deleteItem = async (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
   const userID = req.user;

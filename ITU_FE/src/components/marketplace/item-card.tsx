@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CardHeader, CardContent, CardFooter, Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';
@@ -26,11 +26,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
-import { BookmarkMinus, BookmarkPlus, MoreHorizontal, Trash } from 'lucide-react';
+import { BookmarkMinus, BookmarkPlus, FileEdit, MoreHorizontal, Trash } from 'lucide-react';
+import { EditMarketPlaceItem } from './edit-post';
 
 export function ItemCard({ item }: { item: MarketPlaceItem }) {
   const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const userStore = useAuthStore();
 
   let properties;
@@ -138,7 +140,6 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
         <div className="flex justify-between">
           <div className="flex items-center gap-2">
             <Avatar>
-              <AvatarImage src="/placeholdefffr.svg" />
               <AvatarFallback>{item.seller.name[0]}</AvatarFallback>
             </Avatar>
 
@@ -168,6 +169,12 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
                   <DropdownMenuItem onClick={() => saveBookmarkMutation.mutateAsync()}>
                     <BookmarkPlus className="w-4 mr-2" />
                     Save
+                  </DropdownMenuItem>
+                )}
+                {userStore.user?.id === item.seller.id && (
+                  <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+                    <FileEdit className="w-4 mr-2" />
+                    Edit the post
                   </DropdownMenuItem>
                 )}
                 {userStore.user?.id === item.seller.id && (
@@ -207,6 +214,7 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
           {item.active ? 'Buy Now' : 'Not available'}
         </Button>
       </CardFooter>
+      <EditMarketPlaceItem marketItem={item} open={isEditDialogOpen} setOpen={setIsEditDialogOpen} />
       <AlertDialog open={purchaseDialogOpen} onOpenChange={setPurchaseDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

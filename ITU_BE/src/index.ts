@@ -17,7 +17,7 @@ const port = Number(process.env.PORT) || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://itufe.vercel.app'];
 
 const corsOptions = {
   origin: function (origin: any, callback: any) {
