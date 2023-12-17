@@ -94,7 +94,7 @@ export function MarketplacePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 w-full">
           {(() => {
             const filteredItems = data?.filter(
               (item) => (item.active || showSold) && ((showSaved && item.ItemBookmark.length > 0) || !showSaved)

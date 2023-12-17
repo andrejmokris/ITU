@@ -5,6 +5,8 @@ import authMiddleware from '../middleware/authMiddleware';
 
 const shopRouter = Router();
 
+shopRouter.use(authMiddleware);
+
 // Get all shops
 shopRouter.get('/', ShopController.getAllShops);
 
@@ -14,7 +16,6 @@ shopRouter.get('/photo/:id', ShopController.getPhoto);
 // Get shop by ID
 shopRouter.get('/:id', ShopController.getShopById);
 
-shopRouter.use(authMiddleware);
 // Upload photo for a shop by ID
 shopRouter.post('/upload/:id', upload.single('file'), ShopController.uploadPhoto);
 
