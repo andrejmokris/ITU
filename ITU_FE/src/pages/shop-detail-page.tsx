@@ -88,7 +88,9 @@ export function ShopDetailPage() {
 
           <div className="flex w-full space-x-4 mt-4">
             {data && data?.PhotoUpload.length > 0 ? (
-              data?.PhotoUpload.map((item) => <img src={`${apiURL}/shops/photo/${item.id}`} className="w-1/5"></img>)
+              data?.PhotoUpload.map((item) => (
+                <img src={`${apiURL}/shops/photo/${item.id}`} className="w-1/5" key={`photo-${item.id}`}></img>
+              ))
             ) : (
               <p className="font-semibold text-red-500">No photos found</p>
             )}
