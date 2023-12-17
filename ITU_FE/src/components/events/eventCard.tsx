@@ -26,10 +26,12 @@ import {
 } from '@/components/ui/alert-dialog';
 import { CalendarDaysIcon, FileEdit, MoreHorizontal, Trash } from 'lucide-react';
 import { EditEvent } from './editEvent';
+import { useNavigate } from 'react-router-dom';
 
 export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent }) {
   const queryClient = useQueryClient();
   const userStore = useAuthStore();
+  const navigate = useNavigate();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -111,37 +113,35 @@ export default function EventCard({ thriftEvent }: { thriftEvent: ThriftEvent })
             })}
           </p>
         </div>
-        <div className="absolute top-2 right-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {userStore.user?.id === thriftEvent.authorId && (
+        {userStore.user?.id === thriftEvent.authorId && (
+          <div className="absolute top-2 right-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
                   <FileEdit className="w-4 mr-2" />
                   Edit the event
                 </DropdownMenuItem>
-              )}
-              {userStore.user?.id === thriftEvent.authorId && (
                 <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
                   <Trash className="w-4 mr-2" />
                   Delete the event
                 </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
       </div>
       <CardContent className="space-y-2 p-4">
         <p className="text-gray-600">{thriftEvent.description}</p>
         <div className="flex justify-between items-center">
-          <Button className="text-sm" variant="outline">
+          <Button className="text-sm" variant="outline" onClick={() => navigate(`/events/${thriftEvent.id}`)}>
             Learn More
           </Button>
           {thriftEvent.EventParticipation.length > 0 ? (

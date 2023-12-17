@@ -14,6 +14,7 @@ import { EventsPage } from './pages/events-page';
 import { CalendarPage } from './pages/calendar-page';
 import { MarketplacePage } from './pages/marketplace-page';
 import { MyOrdersPage } from './pages/MyOrders/my-orders';
+import EventDetailPage from './pages/event-detail-page';
 
 function App() {
   const currentPath = useLocation();
@@ -56,6 +57,7 @@ function App() {
           <Route path="/" Component={HomePage} />
           <Route path="/home" Component={HomePage} />
           <Route path="/events" Component={EventsPage} />
+          <Route path="/events/:id" Component={EventDetailPage} />
           <Route path="/login" Component={LogInPage} />
           <Route path="/shop/:id" Component={ShopDetailPage} />
           <Route path="/calendar" Component={CalendarPage} />

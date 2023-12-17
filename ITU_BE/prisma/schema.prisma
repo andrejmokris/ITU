@@ -25,6 +25,8 @@ model User {
   MarketItem         MarketItem[]
   ItemPurchase       ItemPurchase[]
   ItemBookmark       ItemBookmark[]
+  EventComment       EventComment[]
+  EventCommentLike   EventCommentLike[]
 }
 
 model Shop {
@@ -115,6 +117,7 @@ model Event {
   author             User                 @relation(fields: [authorId], references: [id])
   authorId           Int
   EventParticipation EventParticipation[]
+  EventComment       EventComment[]
 }
 
 model EventParticipation {
@@ -157,4 +160,24 @@ model ItemBookmark {
   buyer        User       @relation(fields: [buyerId], references: [id], onDelete: Cascade)
   marketItemId Int
   marketItem   MarketItem @relation(fields: [marketItemId], references: [id], onDelete: Cascade)
+}
+
+model EventComment {
+  id               Int                @id @default(autoincrement())
+  createdAt        DateTime           @default(now())
+  text             String
+  eventId          Int
+  event            Event              @relation(fields: [eventId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId           Int
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  EventCommentLike EventCommentLike[]
+}
+
+model EventCommentLike {
+  id        Int          @id @default(autoincrement())
+  createdAt DateTime     @default(now())
+  commentId Int
+  comment   EventComment @relation(fields: [commentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId    Int
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

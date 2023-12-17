@@ -3,7 +3,7 @@ import prisma from '../db';
 import { ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors';
 import newEventScheme from '../schemas/newEventScheme';
 import { z } from 'zod';
-import { nextTick } from 'process';
+import newCommentScheme from '../schemas/newCommentScheme';
 
 export const findEvents = async (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
@@ -25,6 +25,14 @@ export const findEventById = async (req: Request, res: Response, next: NextFunct
   const event = await prisma.event.findFirst({
     where: {
       id: Number(req.params.id)
+    },
+    include: {
+      EventParticipation: true,
+      author: {
+        select: {
+          name: true
+        }
+      }
     }
   });
 
@@ -211,4 +219,123 @@ export const deleteEvent = async (req: Request, res: Response, next: NextFunctio
   });
 
   res.json(deletedEvent);
+};
+
+export const createComment = async (req: Request, res: Response, next: NextFunction) => {
+  const commentData = req as z.infer<typeof newCommentScheme>;
+  // @ts-expect-error
+  const userId = Number(req.user);
+  const eventId = Number(req.params.id);
+
+  const findEvent = await prisma.event.findFirst({
+    where: {
+      id: eventId
+    }
+  });
+
+  if (!findEvent) {
+    next(new NotFoundError('Event not found'));
+    return;
+  }
+
+  const newComment = await prisma.eventComment.create({
+    data: {
+      userId: userId,
+      eventId: eventId,
+      text: commentData.body.text
+    }
+  });
+
+  res.json(newComment);
+};
+
+export const deleteComment = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userId = Number(req.user);
+  const commentId = Number(req.params.id);
+
+  const findComment = await prisma.eventComment.findFirst({
+    where: {
+      id: commentId
+    }
+  });
+
+  if (!findComment) {
+    next(new NotFoundError('Event not found'));
+    return;
+  }
+
+  if (findComment.userId !== userId) {
+    next(new UnauthorizedError('Not authorized'));
+    return;
+  }
+
+  const deletedComment = await prisma.eventComment.delete({
+    where: {
+      id: commentId
+    }
+  });
+
+  res.json(deletedComment);
+};
+
+export const likeComment = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userId = Number(req.user);
+  const commentId = Number(req.params.id);
+
+  const findComment = await prisma.eventComment.findFirst({
+    where: {
+      id: commentId
+    }
+  });
+
+  if (!findComment) {
+    next(new NotFoundError('Event not found'));
+    return;
+  }
+
+  const findLike = await prisma.eventCommentLike.findFirst({
+    where: {
+      userId: userId,
+      commentId: commentId
+    }
+  });
+
+  if (!findLike) {
+    const newLike = await prisma.eventCommentLike.create({
+      data: {
+        commentId: commentId,
+        userId: userId
+      }
+    });
+    res.json(newLike);
+  } else {
+    const deletedComment = await prisma.eventCommentLike.delete({
+      where: {
+        id: findLike.id
+      }
+    });
+    res.json(deletedComment);
+  }
+};
+
+export const getComments = async (req: Request, res: Response, next: NextFunction) => {
+  const eventId = Number(req.params.id);
+
+  const comments = await prisma.eventComment.findMany({
+    where: {
+      eventId: eventId
+    },
+    include: {
+      EventCommentLike: true,
+      user: {
+        select: {
+          name: true
+        }
+      }
+    }
+  });
+
+  res.json(comments);
 };

@@ -4,6 +4,7 @@ import routeIdScheme from '../schemas/routeIdScheme';
 import authMiddleware from '../middleware/authMiddleware';
 import * as eventController from '../controllers/event-controller';
 import newEventScheme from '../schemas/newEventScheme';
+import newCommentScheme from '../schemas/newCommentScheme';
 
 const eventRoutes = Router();
 
@@ -25,5 +26,17 @@ eventRoutes.get('/me/:id', validateParams(routeIdScheme), eventController.doIAtt
 eventRoutes.post('/signup/:id', validateParams(routeIdScheme), eventController.signUpToEvent);
 
 eventRoutes.delete('/signup/:id', validateParams(routeIdScheme), eventController.signOutOfEvent);
+
+eventRoutes.get('/comments/:id', validateParams(routeIdScheme), eventController.getComments);
+
+eventRoutes.post(
+  '/comments/:id',
+  [validateParams(routeIdScheme), validate(newCommentScheme)],
+  eventController.createComment
+);
+
+eventRoutes.delete('/comments/:id', validateParams(routeIdScheme), eventController.deleteComment);
+
+eventRoutes.post('/like/:id', validateParams(routeIdScheme), eventController.likeComment);
 
 export default eventRoutes;

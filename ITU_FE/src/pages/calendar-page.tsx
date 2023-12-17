@@ -184,7 +184,15 @@ function Meeting({ meeting }: { meeting: CalendarItem }) {
   return (
     <Link to={`/events/${meeting.eventId}`}>
       <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800 focus-within:dark:bg-gray-700 pr-5">
-        <img src={meeting.event.imageURL} alt="" className="flex-none w-10 h-10 rounded-full" />
+        <img
+          src={
+            meeting.event.imageURL
+              ? meeting.event.imageURL
+              : 'https://sustainablefashionconsumption.org/wp-content/uploads/2022/02/Karpova.jpg'
+          }
+          alt=""
+          className="flex-none w-10 h-10 rounded-full"
+        />
         <div className="flex-auto w-full">
           <p className="text-gray-900 dark:text-gray-400 font-semibold">{meeting.event.title}</p>
           <p className="mt-0.5">

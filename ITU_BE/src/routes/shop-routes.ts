@@ -5,13 +5,13 @@ import authMiddleware from '../middleware/authMiddleware';
 
 const shopRouter = Router();
 
+// Get shop photo by ID
+shopRouter.get('/photo/:id', ShopController.getPhoto);
+
 shopRouter.use(authMiddleware);
 
 // Get all shops
 shopRouter.get('/', ShopController.getAllShops);
-
-// Get shop photo by ID
-shopRouter.get('/photo/:id', ShopController.getPhoto);
 
 // Get shop by ID
 shopRouter.get('/:id', ShopController.getShopById);
