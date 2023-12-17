@@ -197,7 +197,7 @@ export function ItemCard({ item }: { item: MarketPlaceItem }) {
       </CardContent>
       <CardFooter>
         <Badge className="mr-2">Size: {item.size}</Badge>
-        {properties.color && <Badge className="mr-2">Color: {properties.color}</Badge>}
+        {properties && 'color' in properties && <Badge className="mr-2">Color: {properties.color}</Badge>}
         <Badge>${item.price}</Badge>
         <Button
           className="ml-auto"

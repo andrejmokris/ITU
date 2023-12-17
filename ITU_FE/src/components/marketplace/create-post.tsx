@@ -13,15 +13,16 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Input } from '../ui/input';
+import { useMutation, useQueryClient } from 'react-query';
+import { api_client } from '@/utils/api-client';
+import { toast } from '../ui/use-toast';
 
 const formSchema = z.object({
   title: z.string().min(5),
   description: z.string().optional(),
-  price: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1)),
+  price: z.string(),
   size: z.string(),
-  image: z.custom<File>((v) => v instanceof File, {
-    message: 'Image is required'
-  })
+  image: z.instanceof(File)
 });
 
 export function CreateMarketPlaceItem() {
@@ -32,14 +33,41 @@ export function CreateMarketPlaceItem() {
     defaultValues: {
       title: '',
       description: '',
-      price: 0,
+      price: '',
       size: '',
-      image: undefined
+      image: new File([], '')
+    }
+  });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationKey: ['createMarketPlaceItemMutation'],
+    mutationFn: async (formData: z.infer<typeof formSchema>) => {
+      const { data } = await api_client.post('/marketplace', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketPlaceQuery'] });
+      toast({
+        title: 'New item Created'
+      });
+      setOpen(false);
+    },
+    onError: () => {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.'
+      });
     }
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    mutation.mutateAsync(values);
   }
 
   return (
@@ -90,7 +118,7 @@ export function CreateMarketPlaceItem() {
                   <FormItem>
                     <FormLabel>Item price</FormLabel>
                     <FormControl>
-                      <Input placeholder="$23" type="number" {...field} />
+                      <Input placeholder="$23" type="number" min={0} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -113,11 +141,11 @@ export function CreateMarketPlaceItem() {
             <FormField
               control={form.control}
               name="image"
-              render={({ field: { onChange } }) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Item photo</FormLabel>
                   <FormControl>
-                    <Input type="file" onChange={(e) => onChange(e.target.files?.[0])} />
+                    <Input type="file" onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

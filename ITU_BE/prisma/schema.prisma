@@ -154,7 +154,7 @@ model ItemPurchase {
 model ItemBookmark {
   id           Int        @id @default(autoincrement())
   buyerId      Int
-  buyer        User       @relation(fields: [buyerId], references: [id])
+  buyer        User       @relation(fields: [buyerId], references: [id], onDelete: Cascade)
   marketItemId Int
-  marketItem   MarketItem @relation(fields: [marketItemId], references: [id])
+  marketItem   MarketItem @relation(fields: [marketItemId], references: [id], onDelete: Cascade)
 }

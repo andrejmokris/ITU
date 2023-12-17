@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import prisma from '../db';
 import { ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors';
+import newMarketItemScheme from '../schemas/newMarketItemScheme';
+import { z } from 'zod';
+import fs from 'fs';
 
 export const getAllItems = async (req: Request, res: Response) => {
   // @ts-expect-error
@@ -34,6 +37,28 @@ export const getAllItems = async (req: Request, res: Response) => {
   res.json(items);
 };
 
+export const createItem = async (req: Request, res: Response, next: NextFunction) => {
+  // @ts-expect-error
+  const userID = req.user;
+  const data = req as z.infer<typeof newMarketItemScheme>;
+
+  // @ts-ignore
+  const filePath: string = req.file.path;
+
+  const newItem = await prisma.marketItem.create({
+    data: {
+      title: data.body.title,
+      description: data.body.description,
+      size: data.body.size,
+      price: Number(data.body.price),
+      sellerId: userID,
+      image: filePath
+    }
+  });
+
+  res.json(newItem);
+};
+
 export const deleteItem = async (req: Request, res: Response, next: NextFunction) => {
   // @ts-expect-error
   const userID = req.user;
@@ -53,6 +78,15 @@ export const deleteItem = async (req: Request, res: Response, next: NextFunction
   if (marketItem.sellerId !== userID) {
     next(new UnauthorizedError('Not authorized'));
     return;
+  }
+
+  if (marketItem.image) {
+    fs.unlink(marketItem.image, (err) => {
+      if (err) {
+        next(new UnauthorizedError('Not authorized'));
+        return;
+      }
+    });
   }
 
   const deletedItem = await prisma.marketItem.delete({
